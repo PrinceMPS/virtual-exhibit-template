@@ -113,4 +113,4 @@ Accompanying image transformations, including:
 
 ## Repository
 
-[**S04 Group 8 CSARCH2 Virtual Exhibit — GitHub**](https://github.com/PrinceMPS/CSARCH2-Virtual-Exhibit)
+[**S04 Group 8 CSARCH2 Virtual Exhibit — GitHub**](https://github.com/PrinceMPS/virtual-exhibit-template.git)
