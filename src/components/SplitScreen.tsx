@@ -3,8 +3,6 @@ import RegionSelector from "./RegionSelector";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
-    onChangeImage: () => void;
-    onRegionChange?: (coords: any) => void;
 }
 
 /* 
@@ -13,8 +11,6 @@ interface SplitScreenProps {
 */
 export default function SplitScreen({
     currentImage,
-    onChangeImage,
-    onRegionChange,
 }: SplitScreenProps) {
     const handleRegionChange = (coords: any) => {
         console.log("Current tracking matrix region:", coords);
@@ -23,7 +19,7 @@ export default function SplitScreen({
 
     return (
         <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
                 <button
                     type="button"
                     className="px-4 py-2 bg-sky-500 rounded font-medium"
@@ -31,14 +27,14 @@ export default function SplitScreen({
                 >
                     Change Image
                 </button>
-            </div>
+            </div> */}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="relative aspect-square w-full overflow-hidden">
                     {currentImage ? (
                         <RegionSelector
                             imageUrl={currentImage.url}
-                            onRegionChange={onRegionChange ?? handleRegionChange}
+                            onRegionChange={handleRegionChange}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-neutral-400">
