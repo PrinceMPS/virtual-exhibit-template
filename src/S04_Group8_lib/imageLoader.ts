@@ -13,13 +13,13 @@ export const SAMPLE_IMAGES: SampleImage[] = [
         id: "1",
         name: "Sample 1",
         desc: "A beautiful sample image",
-        url: "sample1.png",
+        url: "https://cards.scryfall.io/normal/front/a/e/aefcd734-3916-4c77-9d98-3ea2c2795658.jpg?1782684513",
     },
     {
         id: "2",
         name: "Sample 2",
         desc: "Another stunning sample image",
-        url: "sample2.png",
+        url: "https://cards.scryfall.io/large/front/c/6/c6d813e9-560a-4d89-b576-db88dbdb8da7.jpg?1782723919",
     },
 ];
 
@@ -72,7 +72,7 @@ export async function loadImage(
     } catch (err) {
         throw /** @type {ImageLoadError} */ {
             code: "decode_failed",
-            message: `Could not decode "${file.name}". The file may be corrupted.`,
+            mssg: `Could not decode "${file.name}". The file may be corrupted.`,
         };
     }
 }
@@ -102,7 +102,7 @@ export async function loadSample(sample: SampleImage): Promise<DecodedImage> {
     } catch (err) {
         throw /** @type {ImageLoadError} */ {
             code: "network_error",
-            message: `Could not load sample image "${sample.name}".`,
+            mssg: `Could not load sample image "${sample.name}".`,
         };
     }
 }
