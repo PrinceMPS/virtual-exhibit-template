@@ -80,7 +80,7 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
     return (
         <div
             id="image-container-frame"
-            className="relative w-full h-full"
+            className="z-50 npx relative w-full h-full"
             onPointerMove={handlePointerMove}
             onPointerEnter={() => setIsVisible(true)}
             onPointerLeave={() => setIsVisible(false)}
@@ -95,7 +95,7 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
             {isVisible && (
                 <div
                     id="square-selector"
-                    className="absolute border-2 border-white pointer-events-none"
+                    className="absolute z-10 border-2 border-white pointer-events-none"
                     style={{
                         left: `${coords.x}px`,
                         top: `${coords.y}px`,
