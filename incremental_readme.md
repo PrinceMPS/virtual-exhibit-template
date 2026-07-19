@@ -120,6 +120,7 @@ See Proposal: [Original Proposal](./README.md)
 
 -   Chu, Avery Simone
 -   Saguin, VL Kirsten Camille "Kei"
+-   Sia, Justin Michael
 
 **Tasks Accomplished**
 
