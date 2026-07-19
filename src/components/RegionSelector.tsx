@@ -87,10 +87,22 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
         }    
     };
 
+    // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss
+    // specifically does not yield the desire result, hence the need for manual style properties to override
+    // any CSS styling and ensure the region appears on top of the image correctly
     return (
         <div
             id="image-container-frame"
-            className="z-50 npx relative w-full h-full"
+            style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: "400px",
+                aspectRatio: "1 / 1",
+                userSelect: "none",
+                cursor: "none",
+                margin: "0 auto",
+                zIndex: 50,
+            }}
             onPointerMove={handlePointerMove}
             onPointerEnter={() => setIsVisible(true)}
             onPointerLeave={() => setIsVisible(false)}
@@ -99,18 +111,29 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
                 ref={canvasRef}
                 width={400}
                 height={400}
-                className="w-full h-full block bg-neutral-950"
+                style={{
+                    width: "100%",
+                    height: "100%",
+                    display: "block",
+                    backgroundColor: "#0a0a0a",
+                    borderRadius: "8px",
+                }}
             />
 
             {isVisible && (
                 <div
                     id="square-selector"
-                    className="absolute z-10 border-2 border-white pointer-events-none"
                     style={{
                         left: `${coords.x}px`,
                         top: `${coords.y}px`,
                         width: `${coords.w}px`,
                         height: `${coords.h}px`,
+                        position: "absolute",
+                        zIndex: 99,
+                        pointerEvents: "none",
+                        border: "2px solid #ffffff",
+                        boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                        backgroundColor: "rgba(255, 255, 255, 0.3)",
                     }}
                 />
             )}
