@@ -23,6 +23,7 @@ export default function App() {
 
     if (!currentImage) {
         return (
+            // TODO: Update styling to match Revised_Snapshot.png Home Page
             <div className="w-full h-full bg-[#111111] p-10">
                 <div className=" flex flex-col gap-10 items-center">
                     {/* color swatch strip goes here */}
@@ -52,12 +53,10 @@ export default function App() {
     }
 
     // not sure if this is right/if this is where each component is meant to go.
+    //TODO: call ImageInput
     return (
         <div>
-            <button onClick={() => {
-                console.log(currentImage)
-                console.log('yues')
-                setCurrentImage(null)}}>Change image</button>
+            <ImageInput onImageLoad={setCurrentImage} hasImage={true} />
             <div>
                 {/* SplitScreen: original canvas + PixelGrid/PixelInspector */}
                 <SplitScreen currentImage={currentImage}/>
