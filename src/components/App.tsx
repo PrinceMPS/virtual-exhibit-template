@@ -73,8 +73,8 @@ export default function App() {
 
     //Interactible Page: SplitScreen with PixelGrid and PixelInspector
     return (
-        <div>
-            {/* SplitScreen: original canvas + PixelGrid/PixelInspector */}
+        <div className="w-full h-full bg-[#292929] p-10">
+            <ImageInput onImageLoad={setCurrentImage} hasImage={true} />
             <SplitScreen currentImage={currentImage} />
         </div>
     );
