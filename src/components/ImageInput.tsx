@@ -7,6 +7,7 @@ import {
     loadSample,
     SAMPLE_IMAGES,
 } from "../S04_Group8_lib/imageLoader";
+import "../styles/tailwind.css";
 
 interface InputImageProps {
     onImageLoad: (image: DecodedImage) => void;
@@ -105,32 +106,17 @@ export default function InputImage({
         <div>
             <div
                 {...getRootProps()}
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "16px",
-                }}
+                className="flex flex-col items-center gap-4"
             >
                 <input {...getInputProps()} />
 
-                <div style={{ display: "flex", gap: "16px" }}>
+                <div className="flex gap-4">
                     <button
                         type="button"
                         onClick={open}
                         disabled={isDecoding}
                         title="PNG, JPG/JPEG, BMP, HEIC"
-                        style={{
-                            padding: "12px 32px",
-                            borderRadius: "8px",
-                            border: "none",
-                            backgroundColor: "#71C6FF",
-                            color: "#292929",
-                            fontSize: "16px",
-                            fontWeight: 500,
-                            cursor: isDecoding ? "not-allowed" : "pointer",
-                            opacity: isDecoding ? 0.6 : 1,
-                        }}
+                        className="px-8 py-3 rounded-lg border-none bg-[#71C6FF] text-[#292929] text-base font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         {uploadLabel}
                     </button>
@@ -139,31 +125,14 @@ export default function InputImage({
                         type="button"
                         onClick={() => setShowSamples(!showSamples)}
                         disabled={isDecoding}
-                        style={{
-                            padding: "12px 32px",
-                            borderRadius: "8px",
-                            border: "1px solid #ffffff",
-                            backgroundColor: "#292929",
-                            color: "#ffffff",
-                            fontSize: "16px",
-                            fontWeight: 500,
-                            cursor: isDecoding ? "not-allowed" : "pointer",
-                            opacity: isDecoding ? 0.6 : 1,
-                        }}
+                        className="px-8 py-3 rounded-lg border border-white bg-[#292929] text-white text-base font-medium cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                     >
                         Pick Sample Photo
                     </button>
                 </div>
 
                 {showSamples && (
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "8px",
-                            flexWrap: "wrap",
-                            justifyContent: "center",
-                        }}
-                    >
+                    <div className="flex gap-2 flex-wrap justify-center">
                         {SAMPLE_IMAGES.map((sample) => (
                             <button
                                 key={sample.id}
@@ -171,18 +140,7 @@ export default function InputImage({
                                 onClick={() => handleSampleClick(sample)}
                                 disabled={isDecoding}
                                 title={sample.desc}
-                                style={{
-                                    padding: "8px 16px",
-                                    borderRadius: "6px",
-                                    border: "1px solid #555",
-                                    backgroundColor: "#333",
-                                    color: "#fff",
-                                    fontSize: "14px",
-                                    cursor: isDecoding
-                                        ? "not-allowed"
-                                        : "pointer",
-                                    opacity: isDecoding ? 0.6 : 1,
-                                }}
+                                className="px-4 py-2 rounded-md border border-[#555] bg-[#333] text-white text-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                             >
                                 {sample.name}
                             </button>
@@ -192,19 +150,7 @@ export default function InputImage({
             </div>
 
             {localError && (
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: "8px",
-                        borderRadius: "6px",
-                        backgroundColor: "#fef2f2",
-                        padding: "12px",
-                        fontSize: "14px",
-                        color: "#b91c1c",
-                        marginTop: "12px",
-                    }}
-                >
+                <div className="flex items-start gap-2 rounded-md bg-red-50 p-3 text-sm text-red-700 mt-3">
                     <span>{localError.mssg}</span>
                 </div>
             )}

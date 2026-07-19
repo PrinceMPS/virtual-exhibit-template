@@ -23,44 +23,59 @@ export default function App() {
 
     if (!currentImage) {
         return (
-            // TODO: Update styling to match Revised_Snapshot.png Home Page
-            <div className="w-full h-full bg-[#111111] p-10">
-                <div className=" flex flex-col gap-10 items-center">
-                    {/* color swatch strip goes here */}
-                    <h1 className="text-blue-400 font-bold text-[32px]">
-                        How Computers See Images
-                    </h1>
-                    <p className="text-white text-justify m-10">
-                        Every digital image undergoes a series of steps before
-                        it appears on a screen. Images may be stored in formats
-                        such as
-                        <b> PNG, JPG/JPEG, BMP, HEIC,</b> with each using
-                        different methods for organizing and compressing data.
-                        However, before an image can be displayed or modified,
-                        the computer must
-                        <b> decode the file </b>
-                        and load its contents into memory as <b>pixel data</b>.
-                        Once in memory, the image is represented as
-                        <b> numerical values </b>
-                        describing the color and transparency of each pixel,
-                        allowing the computer to perform processing operations
-                        regardless of the original file format.
-                    </p>
-                    <ImageInput onImageLoad={setCurrentImage} />
+            <div className="w-full h-full bg-[#292929] pl-10 pr-1">
+                <div className="flex h-full">
+                    <div
+                        className="w-[100px] h-full pl-10 pr-16 flex items-stretch"
+                        style={{
+                            background: `linear-gradient(to bottom, #6C9DCC 0%, #6C9DCC 20%, #647B91 20%, #647B91 40%, #5E6B78 40%, #5E6B78 60%, #3E4246 60%, #3E4246 80%, #333232 80%, #333232 100%)`,
+                        }}
+                    ></div>
+                    {/* This is the main content area that displays the title, description, and image input component. */}
+                    <div className="flex flex-col items-center flex-1 pb-10">
+                        {/* Title of the exhibit */}
+                        <h2
+                            className="text-[#71C6FF] font-bold text-[32px] w-full pt-10 pb-5 text-center"
+                            style={{ borderBottom: "none" }}
+                        >
+                            How Computers See Images
+                        </h2>
+                        {/* Description of the exhibit */}
+                        <p className="text-white text-justify w-full px-10 pb-5">
+                            Every digital image undergoes a series of steps
+                            before it appears on a screen. Images may be stored
+                            in formats such as
+                            <b> PNG, JPG/JPEG, BMP, HEIC,</b> with each using
+                            different methods for organizing and compressing
+                            data. However, before an image can be displayed or
+                            modified, the computer must
+                            <b> decode the file </b>
+                            and load its contents into memory as{" "}
+                            <b>pixel data</b>. Once in memory, the image is
+                            represented as
+                            <b> numerical values </b>
+                            describing the color and transparency of each pixel,
+                            allowing the computer to perform processing
+                            operations regardless of the original file format.
+                        </p>
+                        <div className="flex items-center justify-center gap-4 text-white text-lg pb-5">
+                            <span className="text-3xl">↓</span>
+                            <span>See the process for yourself!</span>
+                            <span className="text-3xl">↓</span>
+                        </div>
+                        {/* Buttons */}
+                        <ImageInput onImageLoad={setCurrentImage} />
+                    </div>
                 </div>
             </div>
         );
     }
 
-    // not sure if this is right/if this is where each component is meant to go.
-    //TODO: call ImageInput
+    //Interactible Page: SplitScreen with PixelGrid and PixelInspector
     return (
         <div>
-            <ImageInput onImageLoad={setCurrentImage} hasImage={true} />
-            <div>
-                {/* SplitScreen: original canvas + PixelGrid/PixelInspector */}
-                <SplitScreen currentImage={currentImage}/>
-            </div>
+            {/* SplitScreen: original canvas + PixelGrid/PixelInspector */}
+            <SplitScreen currentImage={currentImage} />
         </div>
     );
 }
