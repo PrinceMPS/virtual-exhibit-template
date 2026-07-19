@@ -1,91 +1,96 @@
-// Build RegionSelector.jsx — draggable selection rectangle overlay on the image canvas, emits {x, y, w, h} for PixelGrid
-
-import React from 'react';
+import { useEffect, useState, useRef } from "react";
 
 const SELECTOR_SIZE = 64; // 64 pixels
-const RegionCoordinates = {
+
+interface RegionCoords {
+    x: number;
+    y: number;
+    w: number;
+    h: number;
+}
+
+const DEFAULT_REGION: RegionCoords = {
     x: 0,
     y: 0,
     w: SELECTOR_SIZE,
-    h: SELECTOR_SIZE
+    h: SELECTOR_SIZE,
+};
+
+interface RegionSelectorProps {
+    imageUrl: string;
+    onRegionChange: (coords: RegionCoords) => void;
 }
 
-/* 
-* RegionSelector holds the image so that the coordinates getting returned are accurate
-*
-*/
-
-export default function RegionSelector({ imageUrl, onRegionChange }) {
-    const [coords, setCoords] = useState(RegionCoordinates);
+/**
+ * RegionSelector renders the source image on a canvas and overlays a
+ * fixed-size square that follows the pointer, reporting its coordinates
+ * (relative to the canvas) via onRegionChange.
+ */
+export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelectorProps) {
+    const [coords, setCoords] = useState<RegionCoords>(DEFAULT_REGION);
     const [isVisible, setIsVisible] = useState(false);
 
-    const canvasRef = useRef(null);
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-    // Native Canvas API rendering engine loops whenever props modify downstream
     useEffect(() => {
         if (!canvasRef.current || !imageUrl) return;
 
         const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        let cancelled = false;
         const img = new Image();
 
         img.onload = () => {
-            // clear old frame history buffers
+            if (cancelled) return;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // freeze coordinates tracking matrices
-            ctx.save();
-
-            // draw relative to its center point
-            ctx.drawImage(img, -canvas.width / 2, -canvas.height / 2, canvas.width, canvas.height);
-
-            ctx.restore();
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
 
         img.src = imageUrl;
+
+        return () => {
+            cancelled = true;
+        };
     }, [imageUrl]);
 
-    const handlePointerMove = (e) => {
+    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
 
         let localX = e.clientX - rect.left - SELECTOR_SIZE / 2;
         let localY = e.clientY - rect.top - SELECTOR_SIZE / 2;
 
-        localX = Math.max(0, Math.min(localX, rect.width - SELECTOR_SIZE))
-        localY = Math.max(0, Math.min(localY, rect.height - SELECTOR_SIZE))
+        localX = Math.max(0, Math.min(localX, rect.width - SELECTOR_SIZE));
+        localY = Math.max(0, Math.min(localY, rect.height - SELECTOR_SIZE));
 
-        const NewCoords = {
+        const newCoords: RegionCoords = {
             x: Math.round(localX),
             y: Math.round(localY),
             w: SELECTOR_SIZE,
-            h: SELECTOR_SIZE
+            h: SELECTOR_SIZE,
         };
 
-        setCoords(NewCoords);
+        setCoords(newCoords);
 
-        // change in region = change in pixelgrid
-        if (onRegionChange) {
-            onRegionChange(updatedCoordinates)
-        }
-    }
+        // change in region = change in pixel grid
+        onRegionChange?.(newCoords);
+    };
+
     return (
         <div
             id="image-container-frame"
+            className="relative w-full h-full"
             onPointerMove={handlePointerMove}
             onPointerEnter={() => setIsVisible(true)}
             onPointerLeave={() => setIsVisible(false)}
         >
-            {/* <div id="image-placeholder" className="w-full h-full bg-neutral-900">
-                 contains canvas from image loading
-            </div> */}
             <canvas
                 ref={canvasRef}
                 width={400}
                 height={400}
                 className="w-full h-full block bg-neutral-950"
-            >
-
-            </canvas>
+            />
 
             {isVisible && (
                 <div
@@ -101,4 +106,4 @@ export default function RegionSelector({ imageUrl, onRegionChange }) {
             )}
         </div>
     );
-} 
+}

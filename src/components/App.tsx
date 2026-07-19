@@ -1,15 +1,14 @@
 import { useState } from "react";
 import type { DecodedImage } from "../S04_Group8_lib/types";
-import ImageInput from "./ImageInput.tsx";
-import SplitScreen from "./SplitScreen.jsx";
-// import PixelInspector from "../components/PixelInspector.jsx";
-// import PixelGrid from "../components/PixelGrid.jsx";
-// import ImageProcessor from "../components/ImageProcessor.jsx";
-// import FormatModule from "../components/FormatModule.jsx";
-// import MathVisualizer from "../components/MathVisualizer.jsx";
-import RegionSelector from "./RegionSelector.jsx";
-// import PipelineVisualizer from "../components/PipelineVisualizer.jsx";
-// import MemoryVisualization from "../components/MemoryVisualization.jsx";
+import ImageInput from "./ImageInput";
+import SplitScreen from "./SplitScreen";
+// import PixelInspector from "../components/PixelInspector";
+// import PixelGrid from "../components/PixelGrid";
+// import ImageProcessor from "../components/ImageProcessor";
+// import FormatModule from "../components/FormatModule";
+// import MathVisualizer from "../components/MathVisualizer";
+// import PipelineVisualizer from "../components/PipelineVisualizer";
+// import MemoryVisualization from "../components/MemoryVisualization";
 
 /**
  * The main exhibit application component that manages the state of the current image and renders the appropriate UI based on whether an image is loaded or not.
@@ -55,10 +54,13 @@ export default function App() {
     // not sure if this is right/if this is where each component is meant to go.
     return (
         <div>
-            <button onClick={() => setCurrentImage(null)}>Change image</button>
+            <button onClick={() => {
+                console.log(currentImage)
+                console.log('yues')
+                setCurrentImage(null)}}>Change image</button>
             <div>
                 {/* SplitScreen: original canvas + PixelGrid/PixelInspector */}
-                <SplitScreen />
+                <SplitScreen currentImage={currentImage} onChangeImage={() => setCurrentImage(null)}/>
             </div>
         </div>
     );
