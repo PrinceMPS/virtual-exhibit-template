@@ -23,21 +23,25 @@ export default function App() {
 
     if (!currentImage) {
         return (
-            <div className="w-full h-full bg-[#292929] p-10">
+            <div className="w-full h-full bg-[#292929] pl-10 pr-1">
                 <div className="flex h-full">
-                    <div className="h-full pl-10 pr-16 flex items-stretch">
-                        <div
-                            className="w-[100px] h-full"
-                            style={{
-                                background: `linear-gradient(to bottom, #6C9DCC 0%, #6C9DCC 20%, #647B91 20%, #647B91 40%, #5E6B78 40%, #5E6B78 60%, #3E4246 60%, #3E4246 80%, #333232 80%, #333232 100%)`,
-                            }}
-                        ></div>
-                    </div>
-                    <div className="flex flex-col gap-10 items-center flex-1">
-                        <h1 className="text-[#71C6FF] font-bold text-[32px]">
+                    <div
+                        className="w-[100px] h-full pl-10 pr-16 flex items-stretch"
+                        style={{
+                            background: `linear-gradient(to bottom, #6C9DCC 0%, #6C9DCC 20%, #647B91 20%, #647B91 40%, #5E6B78 40%, #5E6B78 60%, #3E4246 60%, #3E4246 80%, #333232 80%, #333232 100%)`,
+                        }}
+                    ></div>
+                    {/* This is the main content area that displays the title, description, and image input component. */}
+                    <div className="flex flex-col items-center flex-1 pb-10">
+                        {/* Title of the exhibit */}
+                        <h2
+                            className="text-[#71C6FF] font-bold text-[32px] w-full pt-10 pb-5 text-center"
+                            style={{ borderBottom: "none" }}
+                        >
                             How Computers See Images
-                        </h1>
-                        <p className="text-white text-justify m-10">
+                        </h2>
+                        {/* Description of the exhibit */}
+                        <p className="text-white text-justify w-full px-10 pb-5">
                             Every digital image undergoes a series of steps
                             before it appears on a screen. Images may be stored
                             in formats such as
@@ -54,6 +58,12 @@ export default function App() {
                             allowing the computer to perform processing
                             operations regardless of the original file format.
                         </p>
+                        <div className="flex items-center justify-center gap-4 text-white text-lg pb-5">
+                            <span className="text-3xl">↓</span>
+                            <span>See the process for yourself!</span>
+                            <span className="text-3xl">↓</span>
+                        </div>
+                        {/* Buttons */}
                         <ImageInput onImageLoad={setCurrentImage} />
                     </div>
                 </div>
