@@ -74,7 +74,17 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
         setCoords(newCoords);
 
         // change in region = change in pixel grid
-        onRegionChange?.(newCoords);
+        if (canvasRef.current) {
+            const scaleX = canvasRef.current.width / rect.width;
+            const scaleY = canvasRef.current.height / rect.height;
+
+            onRegionChange?.({
+                x: Math.round(localX * scaleX),
+                y: Math.round(localY * scaleY),
+                w: Math.round(SELECTOR_SIZE * scaleX),
+                h: Math.round(SELECTOR_SIZE * scaleY),
+            });
+        }    
     };
 
     return (
