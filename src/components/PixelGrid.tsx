@@ -96,6 +96,49 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
         );
     }
 
+    function toBinary(red: number, green: number, blue: number): string {
+        return [red, green, blue]
+            .map((c) => c.toString(2).padStart(8, "0"))
+            .join("");
+    }
+
+    function rgbToHSL(red: number, green: number, blue: number): string {
+        const r = red / 255;
+        const g = green / 255;
+        const b = blue / 255;
+
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const lightness = (max + min) / 2;
+
+        let saturation = 0;
+        if (max == min) {
+            saturation = 0;
+        } else if (lightness >= 0.5) {
+            saturation = (max - min) / (2 - max - min);
+        } else if (lightness < 0.5) {
+            saturation = (max - min) / (max + min);
+        }
+        saturation = Math.round(saturation * 100);
+
+        let hue = 0;
+        if (max == min) {
+            hue = 0;
+        } else if (max == r) {
+            hue = (g - b) / (max - min);
+        } else if (max == g) {
+            hue = 2 + (b - r) / (max - min);
+        } else {
+            hue = 4 + (r - g) / (max - min);
+        }
+
+        hue *= 60;
+        hue = hue < 0 ? hue + 360 : hue;
+        hue = Math.round(hue);
+
+        return `HSL(${hue}, ${saturation}%, ${Math.round(lightness * 100)}%)`;
+    }
+
     return (
         <div className="flex flex-col gap-2 items-center">
             <canvas
@@ -114,7 +157,7 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                 onPointerLeave={() => setHoveredPixel(null)}
             />
 
-            <div className="w-full text-sm text-center text-neutral-300 font-mono min-h-[2rem] justify-center flex items-center gap-4">
+            <div className="flex flex-row w-full text-sm text-center text-neutral-300 font-mono min-h-[2rem] justify-center flex items-center gap-4">
                 {hoveredPixel ? (
                     <>
                         <span
@@ -127,15 +170,28 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                             ({hoveredPixel.x}, {hoveredPixel.y})
                         </span>
                         <span>
-                            RGB({hoveredPixel.r}, {hoveredPixel.g},{" "}
-                            {hoveredPixel.b})
-                        </span>
-                        <span>
-                            {toHex(
+                            {"Binary: " +
+                                toBinary(
+                                    hoveredPixel.r,
+                                    hoveredPixel.g,
+                                    hoveredPixel.b,
+                                )}
+                            <br />
+                            {rgbToHSL(
                                 hoveredPixel.r,
                                 hoveredPixel.g,
                                 hoveredPixel.b,
                             )}
+                            <br />
+                            RGB({hoveredPixel.r}, {hoveredPixel.g},{" "}
+                            {hoveredPixel.b})
+                            <br />
+                            {"Hex: " +
+                                toHex(
+                                    hoveredPixel.r,
+                                    hoveredPixel.g,
+                                    hoveredPixel.b,
+                                )}
                         </span>
                     </>
                 ) : (
