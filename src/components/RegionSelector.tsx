@@ -1,6 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
-const SELECTOR_SIZE = 64; // 64 pixels
+const SELECTOR_SIZE = 32; // 32 pixels
+const CANVAS_SIZE = 400;
 
 interface RegionCoords {
     x: number;
@@ -18,15 +19,18 @@ const DEFAULT_REGION: RegionCoords = {
 
 interface RegionSelectorProps {
     imageUrl: string;
-    onRegionChange: (coords: RegionCoords) => void;
+    onPixelsChange: (data: ImageData | null) => void;
 }
 
 /**
  * RegionSelector renders the source image on a canvas and overlays a
  * fixed-size square that follows the pointer, reporting its coordinates
- * (relative to the canvas) via onRegionChange.
+ *
  */
-export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelectorProps) {
+export default function RegionSelector({
+    imageUrl,
+    onPixelsChange,
+}: RegionSelectorProps) {
     const [coords, setCoords] = useState<RegionCoords>(DEFAULT_REGION);
     const [isVisible, setIsVisible] = useState(false);
 
@@ -41,6 +45,7 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
 
         let cancelled = false;
         const img = new Image();
+        img.crossOrigin = "anonymous";
 
         img.onload = () => {
             if (cancelled) return;
@@ -55,37 +60,50 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
         };
     }, [imageUrl]);
 
-    const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
+    const handlePointerMove = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
 
-        let localX = e.clientX - rect.left - SELECTOR_SIZE / 2;
-        let localY = e.clientY - rect.top - SELECTOR_SIZE / 2;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const scale = canvas.width / rect.width;
 
-        localX = Math.max(0, Math.min(localX, rect.width - SELECTOR_SIZE));
-        localY = Math.max(0, Math.min(localY, rect.height - SELECTOR_SIZE));
+            let localX = (e.clientX - rect.left) * scale - SELECTOR_SIZE / 2;
+            let localY = (e.clientY - rect.top) * scale - SELECTOR_SIZE / 2;
 
-        const newCoords: RegionCoords = {
-            x: Math.round(localX),
-            y: Math.round(localY),
-            w: SELECTOR_SIZE,
-            h: SELECTOR_SIZE,
-        };
+            localX = Math.round(
+                Math.max(0, Math.min(localX, canvas.width - SELECTOR_SIZE)),
+            );
+            localY = Math.round(
+                Math.max(0, Math.min(localY, canvas.height - SELECTOR_SIZE)),
+            );
 
-        setCoords(newCoords);
+            const selector_to_scale = Math.round(SELECTOR_SIZE / scale);
+            const newCoords: RegionCoords = {
+                x: Math.round(localX / scale),
+                y: Math.round(localY / scale),
+                w: selector_to_scale,
+                h: selector_to_scale,
+            };
 
-        // change in region = change in pixel grid
-        if (canvasRef.current) {
-            const scaleX = canvasRef.current.width / rect.width;
-            const scaleY = canvasRef.current.height / rect.height;
+            setCoords(newCoords);
 
-            onRegionChange?.({
-                x: Math.round(localX * scaleX),
-                y: Math.round(localY * scaleY),
-                w: Math.round(SELECTOR_SIZE * scaleX),
-                h: Math.round(SELECTOR_SIZE * scaleY),
-            });
-        }    
-    };
+            // change in region = change in pixel grid
+            if (canvasRef.current) {
+                const pixels =
+                    canvasRef.current
+                        .getContext("2d")
+                        ?.getImageData(
+                            localX,
+                            localY,
+                            SELECTOR_SIZE,
+                            SELECTOR_SIZE,
+                        ) || null;
+                onPixelsChange(pixels);
+            }
+        },
+        [onPixelsChange],
+    );
 
     // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss
     // specifically does not yield the desire result, hence the need for manual style properties to override
@@ -96,7 +114,7 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
             style={{
                 position: "relative",
                 width: "100%",
-                maxWidth: "400px",
+                maxWidth: `${CANVAS_SIZE}px`,
                 aspectRatio: "1 / 1",
                 userSelect: "none",
                 cursor: "none",
@@ -109,14 +127,13 @@ export default function RegionSelector({ imageUrl, onRegionChange }: RegionSelec
         >
             <canvas
                 ref={canvasRef}
-                width={400}
-                height={400}
+                width={CANVAS_SIZE}
+                height={CANVAS_SIZE}
                 style={{
                     width: "100%",
                     height: "100%",
                     display: "block",
                     backgroundColor: "#0a0a0a",
-                    borderRadius: "8px",
                 }}
             />
 
