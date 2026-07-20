@@ -148,6 +148,29 @@ See Proposal: [Original Proposal](./README.md)
 
 ---
 
+### 07/21/2026 – FormatModule + MemoryVisualization
+
+**Contributor/s**
+
+- Tan, Paul Aiden
+
+**Tasks Accomplished**
+
+- Built FormatModule.tsx – comparison cards for PNG, JPEG, BMP, and HEIC, each showing compression type, transparency support, typical file size, and a proportional diagram of the format's byte layout
+- Built MemoryVisualization.tsx – hex/binary table rendering raw RGBA bytes straight from the decoded ImageData buffer, centered on a selectable pixel
+
+**Things Learned**
+
+- Byte offset for any pixel in an ImageData buffer is (y × width + x) × 4
+- HEIC isn't natively decodable in most non-Safari browsers, which is likely why imageLoader.ts accepts WEBP instead of HEIC
+
+**Challenges**
+
+- PixelGrid.tsx currently keeps its hovered pixel as local state with no callback prop, so MemoryVisualization can't be fully wired to live pixel hovering until that's added
+- The current implementations for the code aren't 'elegant' in any way shape or form, will try to refactor and update if given the time
+
+---
+
 ## Milestones to be Accomplished by Final Submission
 
 - PixelGrid.jsx – for the enlarged pixel grid when a region is selected
@@ -166,3 +189,4 @@ See Proposal: [Original Proposal](./README.md)
 
 - DeepSeek was used to help identify and delegate tasks into relevant milestone divisions.
 - Claude was used to elaborate on what certain functions related to an HTML Canvas Element did. It also provided knowledge how RGB-to-HSL conversion is performed but did not contribute to the programmed function.
+- ChatGPT was used to check the grammar and improve the wording of this md file. 
