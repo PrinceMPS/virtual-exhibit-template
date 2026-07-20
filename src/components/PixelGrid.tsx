@@ -108,7 +108,7 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                     aspectRatio: "1 / 1",
                     display: "block",
                     backgroundColor: "#0a0a0a",
-                    cursor: "crosshair",
+                    cursor: "pointer",
                 }}
                 onPointerMove={handlePointerMove}
                 onPointerLeave={() => setHoveredPixel(null)}
