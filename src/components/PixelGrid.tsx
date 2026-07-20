@@ -44,7 +44,23 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                 );
             }
         }
-    }, [pixelData, gridWidth, gridHeight]);
+
+        //highlight da hovered pixel
+        if (hoveredPixel) {
+            context.save();
+            context.strokeStyle = "#ffffff";
+            context.lineWidth = 2;
+            context.shadowColor = "#000000";
+            context.shadowBlur = 5;
+            context.strokeRect(
+                hoveredPixel.x * cellWidth,
+                hoveredPixel.y * cellHeight,
+                cellWidth,
+                cellHeight,
+            );
+            context.restore();
+        }
+    }, [pixelData, gridWidth, gridHeight, hoveredPixel]);
     //rerender if any of the variables above change
 
     const handlePointerMove = useCallback(
@@ -151,7 +167,7 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                     aspectRatio: "1 / 1",
                     display: "block",
                     backgroundColor: "#0a0a0a",
-                    cursor: "pointer",
+                    cursor: "none",
                 }}
                 onPointerMove={handlePointerMove}
                 onPointerLeave={() => setHoveredPixel(null)}
