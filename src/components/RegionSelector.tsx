@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
-const SELECTOR_SIZE = 64; // 64 pixels
+const SELECTOR_SIZE = 32; // 32 pixels
 const CANVAS_SIZE = 400;
 
 interface RegionCoords {
