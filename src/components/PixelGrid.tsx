@@ -108,14 +108,13 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                     aspectRatio: "1 / 1",
                     display: "block",
                     backgroundColor: "#0a0a0a",
-                    borderRadius: "8px",
                     cursor: "crosshair",
                 }}
                 onPointerMove={handlePointerMove}
                 onPointerLeave={() => setHoveredPixel(null)}
             />
 
-            <div className="w-full text-sm text-neutral-300 font-mono min-h-[2rem] flex items-center gap-4">
+            <div className="w-full text-sm text-center text-neutral-300 font-mono min-h-[2rem] justify-center flex items-center gap-4">
                 {hoveredPixel ? (
                     <>
                         <span

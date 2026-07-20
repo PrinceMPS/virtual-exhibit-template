@@ -142,7 +142,6 @@ export default function RegionSelector({
                     height: "100%",
                     display: "block",
                     backgroundColor: "#0a0a0a",
-                    borderRadius: "8px",
                 }}
             />
 
