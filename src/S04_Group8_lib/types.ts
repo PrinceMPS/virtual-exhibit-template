@@ -42,3 +42,13 @@ export interface ImageInputProps {
     maxFileSizeMB?: number;
     acceptedTypes?: string[];
 }
+
+// Pixel represents the positional and color values of a pixel
+export interface Pixel {
+    x: number;
+    y: number;
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+}

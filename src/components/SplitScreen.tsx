@@ -1,17 +1,19 @@
 import type { DecodedImage } from "../S04_Group8_lib/types";
 import RegionSelector from "./RegionSelector";
+import { useState } from "react";
+import PixelGrid from "./PixelGrid";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
 }
 
-/* 
-* RegionSelector holds the image so that the coordinates getting returned are accurate
-*
-*/
-export default function SplitScreen({
-    currentImage,
-}: SplitScreenProps) {
+/*
+ * RegionSelector holds the image so that the coordinates getting returned are accurate
+ *
+ */
+export default function SplitScreen({ currentImage }: SplitScreenProps) {
+    const [pixels, setPixels] = useState<ImageData | null>(null);
+
     const handleRegionChange = (coords: any) => {
         console.log("Current tracking matrix region:", coords);
         // TODO: implement pixel grid here
@@ -35,6 +37,7 @@ export default function SplitScreen({
                         <RegionSelector
                             imageUrl={currentImage.url}
                             onRegionChange={handleRegionChange}
+                            onPixelsChange={setPixels}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-neutral-400">
@@ -43,32 +46,52 @@ export default function SplitScreen({
                     )}
 
                     <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
-                        <button type="button" title="Rotate Clockwise" className="p-1.5 text-neutral-300">
+                        <button
+                            type="button"
+                            title="Rotate Clockwise"
+                            className="p-1.5 text-neutral-300"
+                        >
                             ↻
                         </button>
-                        <button type="button" title="Zoom Out" className="p-1.5 text-neutral-300">
+                        <button
+                            type="button"
+                            title="Zoom Out"
+                            className="p-1.5 text-neutral-300"
+                        >
                             −
                         </button>
-                        <button type="button" title="Zoom In" className="p-1.5 text-neutral-300">
+                        <button
+                            type="button"
+                            title="Zoom In"
+                            className="p-1.5 text-neutral-300"
+                        >
                             +
                         </button>
                     </div>
                 </div>
 
                 <div id="pixel-grid-panel">
-                    {/* PUT PIXEL GRID HERE */}
+                    <PixelGrid pixelData={pixels}></PixelGrid>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                 <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">How it works in math</h3>
-                    <p className="text-neutral-400 text-sm">Explanation text here</p>
+                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                        How it works in math
+                    </h3>
+                    <p className="text-neutral-400 text-sm">
+                        Explanation text here
+                    </p>
                     <span>[Math Matrix Visual Placeholder]</span>
                 </div>
                 <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">How it works in memory</h3>
-                    <p className="text-neutral-400 text-sm">Explanation text here</p>
+                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                        How it works in memory
+                    </h3>
+                    <p className="text-neutral-400 text-sm">
+                        Explanation text here
+                    </p>
                     <span>[Memory Layout Visual Placeholder]</span>
                 </div>
             </div>
