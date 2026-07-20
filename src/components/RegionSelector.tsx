@@ -19,18 +19,16 @@ const DEFAULT_REGION: RegionCoords = {
 
 interface RegionSelectorProps {
     imageUrl: string;
-    onRegionChange: (coords: RegionCoords) => void;
     onPixelsChange: (data: ImageData | null) => void;
 }
 
 /**
  * RegionSelector renders the source image on a canvas and overlays a
  * fixed-size square that follows the pointer, reporting its coordinates
- * (relative to the canvas) via onRegionChange.
+ *
  */
 export default function RegionSelector({
     imageUrl,
-    onRegionChange,
     onPixelsChange,
 }: RegionSelectorProps) {
     const [coords, setCoords] = useState<RegionCoords>(DEFAULT_REGION);
@@ -47,6 +45,7 @@ export default function RegionSelector({
 
         let cancelled = false;
         const img = new Image();
+        img.crossOrigin = "anonymous";
 
         img.onload = () => {
             if (cancelled) return;
@@ -91,13 +90,6 @@ export default function RegionSelector({
 
             // change in region = change in pixel grid
             if (canvasRef.current) {
-                onRegionChange?.({
-                    x: localX,
-                    y: localY,
-                    w: SELECTOR_SIZE,
-                    h: SELECTOR_SIZE,
-                });
-
                 const pixels =
                     canvasRef.current
                         .getContext("2d")
@@ -110,7 +102,7 @@ export default function RegionSelector({
                 onPixelsChange(pixels);
             }
         },
-        [onRegionChange, onPixelsChange],
+        [onPixelsChange],
     );
 
     // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss

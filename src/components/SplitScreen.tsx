@@ -14,11 +14,6 @@ interface SplitScreenProps {
 export default function SplitScreen({ currentImage }: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
 
-    const handleRegionChange = (coords: any) => {
-        console.log("Current tracking matrix region:", coords);
-        // TODO: implement pixel grid here
-    };
-
     return (
         <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
             {/* <div className="flex gap-4">
@@ -36,7 +31,6 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                     {currentImage ? (
                         <RegionSelector
                             imageUrl={currentImage.url}
-                            onRegionChange={handleRegionChange}
                             onPixelsChange={setPixels}
                         />
                     ) : (
