@@ -1,25 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import type { DecodedImage } from "../S04_Group8_lib/types";
 import ImageInput from "./ImageInput";
 import SplitScreen from "./SplitScreen";
-// import PixelInspector from "../components/PixelInspector";
-// import PixelGrid from "../components/PixelGrid";
-// import ImageProcessor from "../components/ImageProcessor";
-// import FormatModule from "../components/FormatModule";
-// import MathVisualizer from "../components/MathVisualizer";
-// import PipelineVisualizer from "../components/PipelineVisualizer";
-// import MemoryVisualization from "../components/MemoryVisualization";
+import ImageProcessor from "./ImageProcessor";
 
-/**
- * The main exhibit application component that manages the state of the current image and renders the appropriate UI based on whether an image is loaded or not.
- *
- * Sidenote:
- * apparently we can't put this in the index.mdx file because of the way Astro handles JSX components. So we have to put it in a separate file and import it into index.mdx.
- *
- * @returns {JSX.Element}
- */
 export default function App() {
     const [currentImage, setCurrentImage] = useState<DecodedImage | null>(null);
+    const [processedImageData, setProcessedImageData] =
+        useState<ImageData | null>(null);
+    const [activeTab, setActiveTab] = useState<string>("");
+    const [operationParams, setOperationParams] = useState({
+        brightness: 0,
+        scale: 100,
+        rotate: 0,
+    });
+
+    useEffect(() => {
+        setProcessedImageData(null);
+        setActiveTab("");
+        setOperationParams({ brightness: 0, scale: 100, rotate: 0 });
+    }, [currentImage?.id]);
+
+    const handleProcessedUpdate = useCallback(
+        (data: ImageData | null) => {
+            setProcessedImageData(data);
+        },
+        [],
+    );
+
+    const handleParamsChange = useCallback(
+        (params: { brightness: number; scale: number; rotate: number }) => {
+            setOperationParams(params);
+        },
+        [],
+    );
+
+    const handleTabChange = useCallback((tabId: string) => {
+        setActiveTab(tabId);
+    }, []);
 
     if (!currentImage) {
         return (
@@ -31,16 +49,13 @@ export default function App() {
                             background: `linear-gradient(to bottom, #6C9DCC 0%, #6C9DCC 20%, #647B91 20%, #647B91 40%, #5E6B78 40%, #5E6B78 60%, #3E4246 60%, #3E4246 80%, #333232 80%, #333232 100%)`,
                         }}
                     ></div>
-                    {/* This is the main content area that displays the title, description, and image input component. */}
                     <div className="flex flex-col items-center flex-1 pb-10">
-                        {/* Title of the exhibit */}
                         <h2
                             className="text-[#71C6FF] font-bold text-[32px] w-full pt-10 pb-5 text-center"
                             style={{ borderBottom: "none" }}
                         >
                             How Computers See Images
                         </h2>
-                        {/* Description of the exhibit */}
                         <p className="text-white text-justify w-full px-10 pb-5">
                             Every digital image undergoes a series of steps
                             before it appears on a screen. Images may be stored
@@ -63,7 +78,6 @@ export default function App() {
                             <span>See the process for yourself!</span>
                             <span className="text-3xl">↓</span>
                         </div>
-                        {/* Buttons */}
                         <ImageInput onImageLoad={setCurrentImage} />
                     </div>
                 </div>
@@ -71,11 +85,21 @@ export default function App() {
         );
     }
 
-    //Interactible Page: SplitScreen with PixelGrid and PixelInspector
     return (
         <div className="w-full h-full bg-[#292929] p-10">
             <ImageInput onImageLoad={setCurrentImage} hasImage={true} />
-            <SplitScreen currentImage={currentImage} />
+            <SplitScreen
+                currentImage={currentImage}
+                processedImageData={processedImageData}
+                activeTab={activeTab}
+                operationParams={operationParams}
+            />
+            <ImageProcessor
+                imageData={currentImage.imageData}
+                onTabChange={handleTabChange}
+                onProcessedUpdate={handleProcessedUpdate}
+                onParamsChange={handleParamsChange}
+            />
         </div>
     );
 }
