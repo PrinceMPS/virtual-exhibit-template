@@ -431,7 +431,7 @@ export default function MathVisualizer({
     }, [activeTab, pixel, params, originalWidth, originalHeight]);
 
     return (
-        <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-4 h-full">
+        <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-4 h-90 mt-4">
             <h3 className="text-lg font-semibold text-sky-400 mb-3">
                 {title}
             </h3>
