@@ -125,12 +125,17 @@ export default function FormatModule({ image = null }: FormatModuleProps) {
                 {FORMATS.map((fmt) => {
                     const isActive = image?.type === fmt.mime;
                     const isOpen = openId === fmt.id;
+                    const isWide = fmt.id === "webp" || fmt.id === "heic";
                     return (
                         <motion.button
                             key={fmt.id}
                             type="button"
                             onClick={() => setOpenId(isOpen ? null : fmt.id)}
-                            className="text-left rounded-xl border bg-[#232323] p-5 transition-shadow focus-visible:outline focus-visible:outline-2 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
+                            className={`text-left rounded-xl border bg-[#232323] p-5 transition-shadow focus-visible:outline focus-visible:outline-2 w-full ${
+                                isWide
+                                    ? "sm:w-[calc(50%-0.5rem)] lg:w-[calc(42%-0.5rem)]"
+                                    : "sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
+                            }`}
                             style={{
                                 borderColor: isActive ? fmt.accent : "#3E4246",
                                 outlineColor: fmt.accent,
@@ -177,7 +182,7 @@ export default function FormatModule({ image = null }: FormatModuleProps) {
                                         transition={{ duration: 0.2 }}
                                         className="overflow-hidden"
                                     >
-                                        <p className="mt-3 text-sm text-neutral-400">{fmt.blurb}</p>
+                                        <p className="mt-3 text-sm text-neutral-400 text-justify">{fmt.blurb}</p>
 
                                         {/* storage layout diagram: proportional stacked bar */}
                                         <div className="mt-4">
@@ -196,7 +201,7 @@ export default function FormatModule({ image = null }: FormatModuleProps) {
                                                     />
                                                 ))}
                                             </div>
-                                            <ul className="mt-2 space-y-0.5 text-xs text-neutral-400">
+                                            <ul className="mt-2 space-y-0.5 text-xs text-neutral-400 text-justify">
                                                 {fmt.layout.map((seg, i) => (
                                                     <li key={i}>
                                                         <span className="font-medium text-neutral-200">{seg.label}:</span>{" "}
