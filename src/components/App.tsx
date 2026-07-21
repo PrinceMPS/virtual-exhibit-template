@@ -72,10 +72,10 @@ export default function App() {
                             Every digital image undergoes a series of steps
                             before it appears on a screen. Images may be stored
                             in formats such as
-                            <b> PNG, JPG/JPEG, BMP, HEIC,</b> with each using
-                            different methods for organizing and compressing
-                            data. However, before an image can be displayed or
-                            modified, the computer must
+                            <b> PNG, JPG/JPEG, BMP, HEIC and WEBP</b> with each
+                            using different methods for organizing and
+                            compressing data. Before an image can be displayed
+                            or modified, the computer must
                             <b> decode the file </b>
                             and load its contents into memory as{" "}
                             <b>pixel data</b>. Once in memory, the image is
