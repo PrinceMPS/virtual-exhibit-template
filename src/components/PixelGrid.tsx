@@ -168,8 +168,7 @@ export default function PixelGrid({
                 width={DISPLAY_SIZE}
                 height={DISPLAY_SIZE}
                 style={{
-                    width: "100%",
-                    maxWidth: `${DISPLAY_SIZE}px`,
+                    width: `${DISPLAY_SIZE}px`,
                     aspectRatio: "1 / 1",
                     display: "block",
                     backgroundColor: "#0a0a0a",
