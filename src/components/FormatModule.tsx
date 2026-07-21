@@ -77,6 +77,22 @@ const FORMATS: FormatInfo[] = [
         ],
     },
     {
+        id: "webp",
+        label: "WEBP",
+        mime: "image/webp",
+        accent: "#F2A65A",
+        compression: "Either lossy (VP8) or lossless (VP8L), encoder's choice",
+        transparency: "Full alpha channel, in both lossy and lossless modes",
+        typicalSize: "Smaller than PNG and JPEG at equivalent quality — WEBP's main selling point",
+        blurb: "WEBP wraps a video codec's still-frame mode in a general-purpose container. That's also why it can do something PNG and JPEG can't on their own: animation, using the same bitstream format as a video keyframe.",
+        layout: [
+            { label: "RIFF header", detail: "'RIFF' magic bytes, file size, 'WEBP' fourCC", width: 12 },
+            { label: "VP8X chunk", detail: "Optional: flags for alpha, animation, ICC profile", width: 14 },
+            { label: "VP8 / VP8L bitstream", detail: "The actual encoded pixel data, lossy or lossless", width: 58 },
+            { label: "Metadata chunks", detail: "Optional ICCP / EXIF / XMP data", width: 16 },
+        ],
+    },
+    {
         id: "heic",
         label: "HEIC",
         mime: "image/heic",
@@ -105,7 +121,7 @@ export default function FormatModule({ image = null }: FormatModuleProps) {
 
     return (
         <section className="w-full py-10">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="flex flex-wrap justify-center gap-4">
                 {FORMATS.map((fmt) => {
                     const isActive = image?.type === fmt.mime;
                     const isOpen = openId === fmt.id;
@@ -114,7 +130,7 @@ export default function FormatModule({ image = null }: FormatModuleProps) {
                             key={fmt.id}
                             type="button"
                             onClick={() => setOpenId(isOpen ? null : fmt.id)}
-                            className="text-left rounded-xl border bg-[#232323] p-5 transition-shadow focus-visible:outline focus-visible:outline-2"
+                            className="text-left rounded-xl border bg-[#232323] p-5 transition-shadow focus-visible:outline focus-visible:outline-2 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.667rem)]"
                             style={{
                                 borderColor: isActive ? fmt.accent : "#3E4246",
                                 outlineColor: fmt.accent,
