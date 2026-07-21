@@ -267,6 +267,87 @@ function NoPixelBody() {
     );
 }
 
+function ColorFilterBody({ params, pixel }) {
+    const ch = params.colorFilterChannel;
+    const chLabel =
+        ch === "r"
+            ? "Red"
+            : ch === "g"
+              ? "Green"
+              : ch === "b"
+                ? "Blue"
+                : null;
+
+    return (
+        <div className="space-y-4">
+            <div>
+                <p className="text-sm text-neutral-300 font-medium mb-2">
+                    Channel Isolation
+                </p>
+                {chLabel ? (
+                    <div className="text-sm font-mono bg-neutral-900 rounded p-3 space-y-2">
+                        <div className="text-center">
+                            <span className="text-neutral-500">
+                                Only the{" "}
+                            </span>
+                            <span
+                                className={`font-bold ${
+                                    ch === "r"
+                                        ? "text-red-400"
+                                        : ch === "g"
+                                          ? "text-green-400"
+                                          : "text-blue-400"
+                                }`}
+                            >
+                                {chLabel}
+                            </span>
+                            <span className="text-neutral-500">
+                                {" "}
+                                channel is retained. Others set to 0.
+                            </span>
+                        </div>
+                        {pixel && (
+                            <div className="text-center text-xs text-neutral-500 mt-1">
+                                Pixel: R={ch === "r" ? pixel.r : 0}, G=
+                                {ch === "g" ? pixel.g : 0}, B=
+                                {ch === "b" ? pixel.b : 0}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="text-sm font-mono bg-neutral-900 rounded p-3">
+                        <p className="text-center text-neutral-500">
+                            No channel isolation applied yet.
+                        </p>
+                    </div>
+                )}
+            </div>
+
+            <div className="border-t border-neutral-700 pt-3">
+                <p className="text-sm text-neutral-300 font-medium mb-2">
+                    Custom RGB Tint
+                </p>
+                <div className="flex items-center justify-center gap-2 text-sm font-mono bg-neutral-900 rounded p-3">
+                    <span className="text-sky-300">P'</span>
+                    <span className="text-neutral-400">=</span>
+                    <span className="text-neutral-300">clamp(</span>
+                    <span className="text-sky-300">P</span>
+                    <span className="text-neutral-400"> × </span>
+                    <span className="text-yellow-300">m</span>
+                    <span className="text-neutral-300">, 0, 255)</span>
+                </div>
+                <div className="text-center text-xs font-mono bg-neutral-900 rounded mt-2 p-2">
+                    <span className="text-red-400">R×{params.tintR}%</span>
+                    <span className="text-neutral-500"> | </span>
+                    <span className="text-green-400">G×{params.tintG}%</span>
+                    <span className="text-neutral-500"> | </span>
+                    <span className="text-blue-400">B×{params.tintB}%</span>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function MathVisualizer({
     activeTab,
     originalPixels,
@@ -293,6 +374,8 @@ export default function MathVisualizer({
                 return "Scaling — Affine Transform";
             case "rotate":
                 return "Rotation — 2D Rotation Matrix";
+            case "colorFilter":
+                return "Color Filter";
             default:
                 return "Operation Math";
         }
@@ -308,7 +391,7 @@ export default function MathVisualizer({
             );
         }
 
-        if (!pixel && activeTab !== "scale" && activeTab !== "rotate") {
+        if (!pixel && activeTab !== "scale" && activeTab !== "rotate" && activeTab !== "colorFilter") {
             return <NoPixelBody />;
         }
 
@@ -340,6 +423,8 @@ export default function MathVisualizer({
                         oH={originalHeight}
                     />
                 );
+            case "colorFilter":
+                return <ColorFilterBody params={params} pixel={pixel} />;
             default:
                 return null;
         }

@@ -94,3 +94,51 @@ export function rotate(imageData, deg) {
 
     return ctx.getImageData(0, 0, dstW, dstH);
 }
+
+function clamp(v) {
+    return Math.max(0, Math.min(255, Math.round(v)));
+}
+
+export function channelIsolate(imageData, channel) {
+    const data = new Uint8ClampedArray(imageData.data);
+    const out = new ImageData(data, imageData.width, imageData.height);
+    const idx = { r: 0, g: 1, b: 2 }[channel];
+
+    for (let i = 0; i < out.data.length; i += 4) {
+        const val = out.data[i + idx];
+        out.data[i] = channel === "r" ? val : 0;
+        out.data[i + 1] = channel === "g" ? val : 0;
+        out.data[i + 2] = channel === "b" ? val : 0;
+    }
+
+    return out;
+}
+
+export function sepia(imageData) {
+    const data = new Uint8ClampedArray(imageData.data);
+    const out = new ImageData(data, imageData.width, imageData.height);
+
+    for (let i = 0; i < out.data.length; i += 4) {
+        const r = out.data[i];
+        const g = out.data[i + 1];
+        const b = out.data[i + 2];
+        out.data[i] = clamp(0.393 * r + 0.769 * g + 0.189 * b);
+        out.data[i + 1] = clamp(0.349 * r + 0.686 * g + 0.168 * b);
+        out.data[i + 2] = clamp(0.272 * r + 0.534 * g + 0.131 * b);
+    }
+
+    return out;
+}
+
+export function colorTint(imageData, rMul, gMul, bMul) {
+    const data = new Uint8ClampedArray(imageData.data);
+    const out = new ImageData(data, imageData.width, imageData.height);
+
+    for (let i = 0; i < out.data.length; i += 4) {
+        out.data[i] = clamp(out.data[i] * rMul);
+        out.data[i + 1] = clamp(out.data[i + 1] * gMul);
+        out.data[i + 2] = clamp(out.data[i + 2] * bMul);
+    }
+
+    return out;
+}

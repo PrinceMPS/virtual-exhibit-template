@@ -5,6 +5,8 @@ import {
     invert,
     scale,
     rotate,
+    channelIsolate,
+    colorTint,
 } from "../lib/imageProcessing";
 
 const TABS = [
@@ -13,6 +15,7 @@ const TABS = [
     { id: "invert", label: "Invert" },
     { id: "scale", label: "Scale" },
     { id: "rotate", label: "Rotate" },
+    { id: "colorFilter", label: "Color Filter" },
 ];
 
 const CANVAS_SIZE = 320;
@@ -28,6 +31,10 @@ export default function ImageProcessor({
     const [scaleVal, setScaleVal] = useState(100);
     const [rotateVal, setRotateVal] = useState(0);
     const [processedData, setProcessedData] = useState(null);
+    const [colorFilterChannel, setColorFilterChannel] = useState("");
+    const [tintR, setTintR] = useState(100);
+    const [tintG, setTintG] = useState(100);
+    const [tintB, setTintB] = useState(100);
     const canvasRef = useRef(null);
 
     const applyTransform = useCallback(() => {
@@ -65,6 +72,74 @@ export default function ImageProcessor({
         if (onProcessedUpdate) onProcessedUpdate(result);
     }, [imageData, processedData, activeTab, brightnessVal, scaleVal, rotateVal, onProcessedUpdate]);
 
+    const applyFilterFromOriginal = useCallback(
+        (transformFn) => {
+            if (!imageData) return;
+            const copy = new ImageData(
+                new Uint8ClampedArray(imageData.data),
+                imageData.width,
+                imageData.height,
+            );
+            const result = transformFn(copy);
+            setProcessedData(result);
+            if (onProcessedUpdate) onProcessedUpdate(result);
+        },
+        [imageData, onProcessedUpdate],
+    );
+
+    const applyChannelIsolate = useCallback(() => {
+        if (!colorFilterChannel) return;
+        applyFilterFromOriginal((data) =>
+            channelIsolate(data, colorFilterChannel),
+        );
+        if (onParamsChange)
+            onParamsChange({
+                brightness: brightnessVal,
+                scale: scaleVal,
+                rotate: rotateVal,
+                tintR,
+                tintG,
+                tintB,
+                colorFilterChannel,
+            });
+    }, [
+        colorFilterChannel,
+        applyFilterFromOriginal,
+        onParamsChange,
+        brightnessVal,
+        scaleVal,
+        rotateVal,
+        tintR,
+        tintG,
+        tintB,
+    ]);
+
+    const applyTint = useCallback(() => {
+        applyFilterFromOriginal((data) =>
+            colorTint(data, tintR / 100, tintG / 100, tintB / 100),
+        );
+        if (onParamsChange)
+            onParamsChange({
+                brightness: brightnessVal,
+                scale: scaleVal,
+                rotate: rotateVal,
+                tintR,
+                tintG,
+                tintB,
+                colorFilterChannel: colorFilterChannel || "",
+            });
+    }, [
+        tintR,
+        tintG,
+        tintB,
+        applyFilterFromOriginal,
+        onParamsChange,
+        brightnessVal,
+        scaleVal,
+        rotateVal,
+        colorFilterChannel,
+    ]);
+
     const resetImage = useCallback(() => {
         setProcessedData(null);
         if (onProcessedUpdate) onProcessedUpdate(null);
@@ -78,17 +153,30 @@ export default function ImageProcessor({
         [onTabChange],
     );
 
+    const tintRef = useRef({ r: 100, g: 100, b: 100 });
+
     const reportParams = useCallback(
-        (bri, sca, rot) => {
+        (bri, sca, rot, tr, tg, tb, ch) => {
+            const tr2 = tr ?? tintRef.current.r;
+            const tg2 = tg ?? tintRef.current.g;
+            const tb2 = tb ?? tintRef.current.b;
             if (onParamsChange)
                 onParamsChange({
                     brightness: bri,
                     scale: sca,
                     rotate: rot,
+                    tintR: tr2,
+                    tintG: tg2,
+                    tintB: tb2,
+                    colorFilterChannel: ch ?? "",
                 });
         },
         [onParamsChange],
     );
+
+    useEffect(() => {
+        tintRef.current = { r: tintR, g: tintG, b: tintB };
+    }, [tintR, tintG, tintB]);
 
     useEffect(() => {
         setProcessedData(null);
@@ -96,8 +184,21 @@ export default function ImageProcessor({
         setBrightnessVal(0);
         setScaleVal(100);
         setRotateVal(0);
-        reportParams(0, 100, 0);
-    }, [imageData, reportParams]);
+        setTintR(100);
+        setTintG(100);
+        setTintB(100);
+        setColorFilterChannel("");
+        if (onParamsChange)
+            onParamsChange({
+                brightness: 0,
+                scale: 100,
+                rotate: 0,
+                tintR: 100,
+                tintG: 100,
+                tintB: 100,
+                colorFilterChannel: "",
+            });
+    }, [imageData, onParamsChange]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -182,6 +283,8 @@ export default function ImageProcessor({
                                     "Resize the image by a uniform scale factor."}
                                 {activeTab === "rotate" &&
                                     "Rotate the image by a given angle."}
+                                {activeTab === "colorFilter" &&
+                                    "Isolate color channels or apply a custom RGB tint."}
                             </p>
 
                             {activeTab === "brightness" && (
@@ -244,13 +347,96 @@ export default function ImageProcessor({
                                 </div>
                             )}
 
-                            <button
-                                type="button"
-                                onClick={applyTransform}
-                                className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded font-medium transition-colors"
-                            >
-                                Apply {TABS.find((t) => t.id === activeTab)?.label || activeTab}
-                            </button>
+                            {activeTab === "colorFilter" && (
+                                <div className="space-y-4">
+                                    <div>
+                                        <p className="text-sm text-neutral-300 font-medium mb-2">
+                                            Channel Isolation
+                                        </p>
+                                        <div className="flex gap-2">
+                                            {["r", "g", "b"].map((ch) => (
+                                                <button
+                                                    key={ch}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setColorFilterChannel(
+                                                            ch ===
+                                                                colorFilterChannel
+                                                                ? ""
+                                                                : ch,
+                                                        )
+                                                    }
+                                                    className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                                                        colorFilterChannel ===
+                                                        ch
+                                                            ? "bg-sky-500 text-white"
+                                                            : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
+                                                    }`}
+                                                >
+                                                    {ch === "r" && "Red"}
+                                                    {ch === "g" && "Green"}
+                                                    {ch === "b" && "Blue"}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={applyChannelIsolate}
+                                            disabled={!colorFilterChannel}
+                                            className="mt-2 px-4 py-1.5 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 rounded text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                                        >
+                                            Apply Channel Filter
+                                        </button>
+                                    </div>
+
+                                    <div className="border-t border-neutral-600 pt-3">
+                                        <p className="text-sm text-neutral-300 font-medium mb-2">
+                                            Custom RGB Tint
+                                        </p>
+                                        {[
+                                            { label: "R", val: tintR, set: setTintR, color: "text-red-400" },
+                                            { label: "G", val: tintG, set: setTintG, color: "text-green-400" },
+                                            { label: "B", val: tintB, set: setTintB, color: "text-blue-400" },
+                                        ].map(({ label, val, set, color }) => (
+                                            <div key={label} className="mb-1">
+                                                <label className={`text-xs ${color} block`}>
+                                                    {label}: {val}%
+                                                </label>
+                                                <input
+                                                    type="range"
+                                                    min="0"
+                                                    max="200"
+                                                    value={val}
+                                                    onChange={(e) => {
+                                                        const v = Number(
+                                                            e.target.value,
+                                                        );
+                                                        set(v);
+                                                    }}
+                                                    className="w-full accent-sky-500"
+                                                />
+                                            </div>
+                                        ))}
+                                        <button
+                                            type="button"
+                                            onClick={applyTint}
+                                            className="mt-1 px-4 py-1.5 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 rounded text-xs font-medium transition-colors"
+                                        >
+                                            Apply Tint
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab !== "colorFilter" && (
+                                <button
+                                    type="button"
+                                    onClick={applyTransform}
+                                    className="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded font-medium transition-colors"
+                                >
+                                    Apply {TABS.find((t) => t.id === activeTab)?.label || activeTab}
+                                </button>
+                            )}
                         </div>
                     ) : (
                         <p className="text-sm text-neutral-500 italic">
