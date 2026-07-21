@@ -150,9 +150,11 @@ See Proposal: [Original Proposal](./README.md)
 
 **Tasks Accomplished**
 
--   Updated styling to match revised snapshot
--   Created PixelGrid component which shows a 32x32 region of pixels from the image.
-    You can hover over a pixel to display its coordinates and color values.
+- Updated styling to match revised snapshot
+- Ensured home page (SplitScreen) is properly presenting the correct image based on ImageInput
+- Fixed internal computation of RegionSelector to ensure the correct coordinates are being returned
+- Created PixelGrid component which shows a 32x32 region of pixels from the image.
+  You can hover over a pixel to display its coordinates and color values.
 
 ---
 
@@ -223,6 +225,21 @@ See Proposal: [Original Proposal](./README.md)
 
 ---
 
+### 07/21/2026 - Region Locking + QoL User Interactions
+**Contributor/s**
+
+- Saguin, VL Kirsten Camille "Kei"
+
+**Tasks Accomplished**
+
+- RegionSelector is now locked once a specific section is selected, allowing the user to know the area the PixelGrid is focusing on
+- Integrated visual changes to signal to a user that the RegionSelector is locked 
+- Ensured all elements tightly fit inside the designated containers, including RegionSelector in the image area
+
+**Things Learned and AHA! Moment**
+
+- Coordinate positions had to be correctly scaled in order to interact correctly with the image and return the correct area for the PixelGrid
+
 ## Milestones to be Accomplished by Final Submission
 
 -   PixelGrid.jsx – for the enlarged pixel grid when a region is selected
@@ -236,6 +253,7 @@ See Proposal: [Original Proposal](./README.md)
 
 ## Use of Generative AI/LLM
 
--   DeepSeek was used to help identify and delegate tasks into relevant milestone divisions.
--   Claude was used to elaborate on what certain functions related to an HTML Canvas Element did. It also provided knowledge how RGB-to-HSL conversion is performed but did not contribute to the programmed function.
--   ChatGPT was used to check the grammar and improve the wording of this md file and documentations/comments.
+- DeepSeek was used to help identify and delegate tasks into relevant milestone divisions.
+- Claude was used to elaborate on what certain functions related to an HTML Canvas Element did. It also provided knowledge how RGB-to-HSL conversion is performed but did not contribute to the programmed function.
+- ChatGPT was used to check the grammar and improve the wording of this md file and documentations/comments. 
+- Gemini was to figure out what CSS style classes are needed. Upon experimentation, tailwindcss utlities specifically cannot yield the desired result, hence the need for manual style properties to override any CSS styling (for RegionSelector specifically)
