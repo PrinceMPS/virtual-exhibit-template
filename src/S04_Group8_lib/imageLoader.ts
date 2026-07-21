@@ -12,14 +12,14 @@ export const SAMPLE_IMAGES: SampleImage[] = [
     {
         id: "1",
         name: "Sample 1",
-        desc: "A beautiful sample image",
-        url: "https://cards.scryfall.io/normal/front/a/e/aefcd734-3916-4c77-9d98-3ea2c2795658.jpg?1782684513",
+        desc: "Photo of a cat",
+        url: "https://images.unsplash.com/photo-1553181001-f9cf6c45afca?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
     {
         id: "2",
         name: "Sample 2",
-        desc: "Another stunning sample image",
-        url: "https://cards.scryfall.io/large/front/c/6/c6d813e9-560a-4d89-b576-db88dbdb8da7.jpg?1782723919",
+        desc: "Photo of a mountain",
+        url: "https://images.unsplash.com/photo-1599385549907-a8a47fb6e402?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
 ];
 

@@ -32,7 +32,8 @@ export default function RegionSelector({
     onPixelsChange,
 }: RegionSelectorProps) {
     const [coords, setCoords] = useState<RegionCoords>(DEFAULT_REGION);
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible] = useState(true);
+    const [isStatic, setIsStatic] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -60,7 +61,7 @@ export default function RegionSelector({
         };
     }, [imageUrl]);
 
-    const handlePointerMove = useCallback(
+    const getRegionCoords = useCallback(
         (e: React.PointerEvent<HTMLDivElement>) => {
             const canvas = canvasRef.current;
             if (!canvas) return;
@@ -88,72 +89,118 @@ export default function RegionSelector({
 
             setCoords(newCoords);
 
-            // change in region = change in pixel grid
-            if (canvasRef.current) {
-                const pixels =
-                    canvasRef.current
-                        .getContext("2d")
-                        ?.getImageData(
-                            localX,
-                            localY,
-                            SELECTOR_SIZE,
-                            SELECTOR_SIZE,
-                        ) || null;
-                onPixelsChange(pixels);
-            }
+            // Change in region = change in pixel grid
+            const pixels =
+                canvas
+                    .getContext("2d")
+                    ?.getImageData(
+                        localX,
+                        localY,
+                        SELECTOR_SIZE,
+                        SELECTOR_SIZE,
+                    ) || null;
+
+            onPixelsChange(pixels);
         },
         [onPixelsChange],
     );
 
-    // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss
-    // specifically does not yield the desire result, hence the need for manual style properties to override
-    // any CSS styling and ensure the region appears on top of the image correctly
-    return (
-        <div
-            id="image-container-frame"
-            style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: `${CANVAS_SIZE}px`,
-                aspectRatio: "1 / 1",
-                userSelect: "none",
-                cursor: "none",
-                margin: "0 auto",
-                zIndex: 50,
-            }}
-            onPointerMove={handlePointerMove}
-            onPointerEnter={() => setIsVisible(true)}
-            onPointerLeave={() => setIsVisible(false)}
-        >
-            <canvas
-                ref={canvasRef}
-                width={CANVAS_SIZE}
-                height={CANVAS_SIZE}
-                style={{
-                    width: "100%",
-                    height: "100%",
-                    display: "block",
-                    backgroundColor: "#0a0a0a",
-                }}
-            />
+    const handlePointerMove = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            // even if mouse keeps moving, becuase it is static it will not update pixel selector
+            if (isStatic) return;
 
-            {isVisible && (
-                <div
-                    id="square-selector"
+            getRegionCoords(e); // constant based on movement of the pointer
+        },
+        [isStatic, getRegionCoords],
+    );
+
+    const handlePointerClick = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            const isStaticState = !isStatic;
+            setIsStatic(isStaticState);
+
+            // if true, store the current region
+            if (isStaticState) {
+                getRegionCoords(e);
+            }
+        },
+        [isStatic, getRegionCoords],
+    );
+
+    return (
+        <>
+            <div
+                id="image-container-frame"
+                style={{
+                    position: "relative",
+                    width: "100%",
+                    maxWidth: `${CANVAS_SIZE}px`,
+                    aspectRatio: "1 / 1",
+                    userSelect: "none",
+                    cursor: isStatic ? "pointer" : "none",
+                    margin: "0 auto",
+                    zIndex: 50,
+                }}
+                onPointerMove={handlePointerMove}
+                onClick={handlePointerClick}
+            >
+                <canvas
+                    ref={canvasRef}
+                    width={CANVAS_SIZE}
+                    height={CANVAS_SIZE}
                     style={{
-                        left: `${coords.x}px`,
-                        top: `${coords.y}px`,
-                        width: `${coords.w}px`,
-                        height: `${coords.h}px`,
-                        position: "absolute",
-                        zIndex: 99,
-                        pointerEvents: "none",
-                        border: "2px solid #ffffff",
-                        boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        backgroundColor: "#0a0a0a",
                     }}
                 />
-            )}
-        </div>
+
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[60] px-2 py-1 rounded bg-black/70 text-neutral-500 text-sm pointer-events-none whitespace-nowrap">
+                    {isStatic
+                        ? "Click to make the cursor movable"
+                        : "Click to make the cursor static"}
+                </div>
+
+                {isVisible && isStatic && (
+                    <div
+                        id="square-selector"
+                        style={{
+                            left: `${coords.x}px`,
+                            top: `${coords.y}px`,
+                            width: `${coords.w}px`,
+                            height: `${coords.h}px`,
+                            position: "absolute",
+                            zIndex: 99,
+                            pointerEvents: "none",
+                            border: "2px solid #85f7cd",
+                            boxShadow:
+                                "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        }}
+                    />
+                )}
+
+                {isVisible && !isStatic && (
+                    <div
+                        id="square-selector"
+                        style={{
+                            left: `${coords.x}px`,
+                            top: `${coords.y}px`,
+                            width: `${coords.w}px`,
+                            height: `${coords.h}px`,
+                            position: "absolute",
+                            zIndex: 99,
+                            pointerEvents: "none",
+                            border: "2px solid #ffffff",
+                            boxShadow:
+                                "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                            backgroundColor: "rgba(255, 255, 255, 0.4)",
+                        }}
+                    />
+                )}
+            </div>
+        </>
     );
 }

@@ -1,53 +1,82 @@
 import type { DecodedImage } from "../S04_Group8_lib/types";
 import RegionSelector from "./RegionSelector";
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import PixelGrid from "./PixelGrid";
 import { type Pixel } from "../S04_Group8_lib/types";
 import MemoryVisualization from "./MemoryVisualization";
+import MathVisualizer from "./MathVisualizer";
+import PipelineVisualizer from "./PipelineVisualizer";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
+    processedImageData: ImageData | null;
+    activeTab: string;
+    operationParams: { brightness: number; scale: number; rotate: number };
 }
 
-/*
- * RegionSelector holds the image so that the coordinates getting returned are accurate
- *
- */
-export default function SplitScreen({ currentImage }: SplitScreenProps) {
+function imageDataToUrl(data: ImageData): string {
+    const c = document.createElement("canvas");
+    c.width = data.width;
+    c.height = data.height;
+    const ctx = c.getContext("2d");
+    if (!ctx) return "";
+    ctx.putImageData(data, 0, 0);
+    return c.toDataURL();
+}
+
+export default function SplitScreen({
+    currentImage,
+    processedImageData,
+    activeTab,
+    operationParams,
+}: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
     const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
+    const [originalPixels, setOriginalPixels] = useState<ImageData | null>(
+        null,
+    );
+    const [processedPixels, setProcessedPixels] = useState<ImageData | null>(
+        null,
+    );
+
+    const processedImageUrl = useMemo(() => {
+        if (!processedImageData) return null;
+        return imageDataToUrl(processedImageData);
+    }, [processedImageData]);
+
+    useEffect(() => {
+        setOriginalPixels(null);
+        setProcessedPixels(null);
+    }, [currentImage?.id]);
+
+    const handlePixelsChange = useCallback(
+        (data: ImageData | null) => {
+            setPixels(data);
+            if (processedImageData) {
+                setProcessedPixels(data);
+            } else {
+                setOriginalPixels(data);
+            }
+        },
+        [processedImageData],
+    ); 
+
+    const imageUrl = processedImageUrl || currentImage?.url || "";
 
     return (
-        <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
-            <div>
-                <h2 className="text-xl font-semibold text-sky-400 mb-1">
-                    Zoom into the pixels
-                </h2>
-                <p className="text-neutral-400 text-sm max-w-2xl">
-                    Drag a selection box anywhere on your image to pick a
-                    region. On the right, that region is blown up into a
-                    grid where each square is one pixel — hover over any
-                    square to see exactly what numbers the computer stored
-                    for that single point of color.
-                </p>
-            </div>
-
-            {/* <div className="flex gap-4">
-                <button
-                    type="button"
-                    className="px-4 py-2 bg-sky-500 rounded font-medium"
-                    onClick={onChangeImage}
+        <div className="p-6 text-white max-h-screen max-w-full overflow-x-hidden items-center flex flex-col gap-6">
+            <div
+                id="top-panels"
+                className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-6"
+            >
+                <div
+                    id="image-panel"
+                    className="relative aspect-square w-full md:w-[400px] shrink-0 overflow-hidden rounded-lg bg-neutral-950"
                 >
-                    Change Image
-                </button>
-            </div> */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="relative aspect-square w-full overflow-hidden">
                     {currentImage ? (
                         <RegionSelector
-                            imageUrl={currentImage.url}
-                            onPixelsChange={setPixels}
+                            imageUrl={imageUrl}
+                            onPixelsChange={handlePixelsChange}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-neutral-400">
@@ -55,7 +84,7 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                         </div>
                     )}
 
-                    <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
+                    {/* <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
                         <button
                             type="button"
                             title="Rotate Clockwise"
@@ -77,7 +106,7 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                         >
                             +
                         </button>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div id="pixel-grid-panel">
@@ -137,6 +166,15 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                         pixel={hoveredPixel}
                     />
                 </div>
+                <MathVisualizer
+                    activeTab={activeTab}
+                    originalPixels={originalPixels}
+                    processedPixels={processedPixels}
+                    params={operationParams}
+                    originalWidth={currentImage?.width ?? 0}
+                    originalHeight={currentImage?.height ?? 0}
+                />
+                <PipelineVisualizer />
             </div>
         </div>
     );
