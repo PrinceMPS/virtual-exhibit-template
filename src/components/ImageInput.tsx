@@ -21,7 +21,7 @@ export default function InputImage({
     onImageLoad,
     onError,
     maxFileSizeMB = 10,
-    acceptedTypes = ["image/png", "image/jpeg", "image/bmp", "image/webp"],
+    acceptedTypes = ["image/png", "image/jpeg", "image/bmp", "image/webp, image/heic"],
     hasImage = false,
 }: InputImageProps) {
     const [isDecoding, setIsDecoding] = useState(false);

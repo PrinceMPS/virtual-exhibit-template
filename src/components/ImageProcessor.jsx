@@ -235,18 +235,18 @@ export default function ImageProcessor({
     const hasProcessing = processedData !== null;
 
     return (
-        <div className="bg-neutral-800 rounded-lg border border-neutral-700 p-4">
+        <div className=" bg-neutral-800 rounded-lg border border-neutral-700 p-4">
             <h3 className="text-lg font-semibold text-sky-400 mb-3">
                 Image Processor
             </h3>
 
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="w-fit flex flex-wrap gap-2 mb-4 justify-center">
                 {TABS.map((tab) => (
                     <button
                         key={tab.id}
                         type="button"
                         onClick={() => handleTabChange(tab.id)}
-                        className={`px-4 py-2 rounded font-medium text-sm transition-colors ${
+                        className={`px-4 w-full py-2 rounded font-medium text-sm transition-colors ${
                             activeTab === tab.id
                                 ? "bg-sky-500 text-white"
                                 : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
@@ -258,7 +258,7 @@ export default function ImageProcessor({
             </div>
 
             <div className="flex flex-col md:flex-row gap-4">
-                <div className="flex-shrink-0 flex items-center justify-center bg-neutral-900 rounded border border-neutral-600 p-2">
+                {/* <div className="flex-shrink-0 flex items-center justify-center bg-neutral-900 rounded border border-neutral-600 p-2">
                     <canvas
                         ref={canvasRef}
                         className="max-w-full h-auto"
@@ -267,7 +267,7 @@ export default function ImageProcessor({
                             maxHeight: `${CANVAS_SIZE}px`,
                         }}
                     />
-                </div>
+                </div> */}
 
                 <div className="flex-1 flex flex-col gap-3">
                     {activeTab ? (

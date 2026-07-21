@@ -102,8 +102,8 @@ export default function MemoryVisualization({
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <p className="text-sm text-neutral-400">
                     Every pixel is stored as 4 consecutive bytes —{" "}
-                    <span className="font-mono">R, G, B, A</span> — one after another,
-                    row by row. This is a window into that buffer.
+                    <span className="font-mono">R, G, B, A</span> — one after
+                    another, row by row. This is a window into that buffer.
                 </p>
                 <div className="flex items-center gap-3 text-xs text-neutral-300">
                     <label className="flex items-center gap-1">
@@ -114,7 +114,10 @@ export default function MemoryVisualization({
                             max={Math.max(width - 1, 0)}
                             value={internalPixel.x}
                             onChange={(e) =>
-                                setInternalPixel((p) => ({ ...p, x: Number(e.target.value) }))
+                                setInternalPixel((p) => ({
+                                    ...p,
+                                    x: Number(e.target.value),
+                                }))
                             }
                             className="w-16 rounded border border-neutral-600 bg-[#1a1a1a] px-1 py-0.5"
                         />
@@ -127,7 +130,10 @@ export default function MemoryVisualization({
                             max={Math.max(height - 1, 0)}
                             value={internalPixel.y}
                             onChange={(e) =>
-                                setInternalPixel((p) => ({ ...p, y: Number(e.target.value) }))
+                                setInternalPixel((p) => ({
+                                    ...p,
+                                    y: Number(e.target.value),
+                                }))
                             }
                             className="w-16 rounded border border-neutral-600 bg-[#1a1a1a] px-1 py-0.5"
                         />
@@ -136,15 +142,23 @@ export default function MemoryVisualization({
             </div>
 
             <div
-                className="overflow-x-auto rounded-xl border border-neutral-700 bg-[#0a0a0a] p-4 font-mono text-xs text-neutral-300"
-                style={{ fontFamily: "'IBM Plex Mono', ui-monospace, monospace" }}
+                className="overflow-x-auto rounded-xl text-xs border border-neutral-700 bg-[#0a0a0a] p-4 font-mono text-xs text-neutral-300"
+                style={{
+                    fontFamily: "'IBM Plex Mono', ui-monospace, monospace",
+                }}
             >
                 <table className="w-full border-collapse">
                     <thead>
                         <tr className="text-neutral-500">
-                            <th className="px-2 py-1 text-left font-normal">pixel</th>
-                            <th className="px-2 py-1 text-left font-normal">byte offset</th>
-                            <th className="px-2 py-1 text-left font-normal">(x, y)</th>
+                            <th className="px-2 py-1 text-left font-normal">
+                                pixel
+                            </th>
+                            <th className="px-2 py-1 text-left font-normal">
+                                byte offset
+                            </th>
+                            <th className="px-2 py-1 text-left font-normal">
+                                (x, y)
+                            </th>
                             {CHANNEL_LABELS.map((c, i) => (
                                 <th
                                     key={c}
@@ -160,16 +174,31 @@ export default function MemoryVisualization({
                         {rows.map((row) => (
                             <tr
                                 key={row.pixelIndex}
-                                className={row.isSelected ? "bg-[#71C6FF]/10" : "hover:bg-white/5"}
+                                className={
+                                    row.isSelected
+                                        ? "bg-[#71C6FF]/10"
+                                        : "hover:bg-white/5"
+                                }
                             >
-                                <td className="px-2 py-1 text-neutral-500">#{row.pixelIndex}</td>
-                                <td className="px-2 py-1 text-neutral-500">0x{toHex(row.offset)}</td>
+                                <td className="px-2 py-1 text-neutral-500">
+                                    #{row.pixelIndex}
+                                </td>
+                                <td className="px-2 py-1 text-neutral-500">
+                                    0x{toHex(row.offset)}
+                                </td>
                                 <td className="px-2 py-1">
                                     ({row.x}, {row.y})
                                 </td>
                                 {row.bytes.map((b, i) => (
-                                    <td key={i} className="px-2 py-1" style={{ color: CHANNEL_COLORS[i] }}>
-                                        {toHex(b)} <span className="text-neutral-500">{toBinary(b)}</span>
+                                    <td
+                                        key={i}
+                                        className="px-2 py-1"
+                                        style={{ color: CHANNEL_COLORS[i] }}
+                                    >
+                                        {toHex(b)}{" "}
+                                        <span className="text-neutral-500">
+                                            {toBinary(b)}
+                                        </span>
                                     </td>
                                 ))}
                             </tr>
