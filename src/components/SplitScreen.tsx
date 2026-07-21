@@ -2,6 +2,8 @@ import type { DecodedImage } from "../S04_Group8_lib/types";
 import RegionSelector from "./RegionSelector";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import PixelGrid from "./PixelGrid";
+import { type Pixel } from "../S04_Group8_lib/types";
+import MemoryVisualization from "./MemoryVisualization";
 import MathVisualizer from "./MathVisualizer";
 import PipelineVisualizer from "./PipelineVisualizer";
 
@@ -29,6 +31,7 @@ export default function SplitScreen({
     operationParams,
 }: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
+    const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
     const [originalPixels, setOriginalPixels] = useState<ImageData | null>(
         null,
     );
@@ -56,7 +59,7 @@ export default function SplitScreen({
             }
         },
         [processedImageData],
-    );
+    ); 
 
     const imageUrl = processedImageUrl || currentImage?.url || "";
 
@@ -106,15 +109,63 @@ export default function SplitScreen({
                     </div> */}
                 </div>
 
-                <div
-                    id="pixel-grid-panel"
-                    className="relative w-full md:w-[400px] shrink-0"
-                >
-                    <PixelGrid pixelData={pixels} />
+                <div id="pixel-grid-panel">
+                    <PixelGrid
+                        pixelData={pixels}
+                        onPixelChange={setHoveredPixel}
+                    ></PixelGrid>
                 </div>
             </div>
 
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div>
+                <h2 className="text-xl font-semibold text-sky-400 mb-1">
+                    What's actually happening
+                </h2>
+                <p className="text-neutral-400 text-sm max-w-2xl">
+                    Whatever pixel you're hovering above is really just
+                    four numbers, but those numbers get used in two very
+                    different ways depending on what you're doing with the
+                    image. Here's the same pixel, viewed as an equation and
+                    as raw bytes.
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                <div className="p-6">
+                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                        How it works in math
+                    </h3>
+                    <p className="text-neutral-400 text-sm">
+                        Every transform is a small equation applied to each
+                        pixel. Grayscale isn't a simple average of red,
+                        green, and blue,  human eyes are more sensitive to
+                        green, so a proper grayscale value is the weighted
+                        sum 0.299R + 0.587G + 0.114B. Brightness is even
+                        simpler: add a constant to every channel and clamp
+                        the result between 0 and 255 so colors don't wrap
+                        around. Rotation works differently, instead of
+                        touching color values, it recalculates where each
+                        pixel lands using a rotation matrix, then works
+                        backward to find which original pixel maps to each
+                        new coordinate. The formulas below break down each
+                        one step by step.
+                    </p>
+                    <span>[Math Matrix Visual Placeholder]</span>
+                </div>
+                <div className="p-6">
+                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                        How it works in memory
+                    </h3>
+                    <p className="text-neutral-400 text-sm">
+                        Every pixel you hover in the grid above is really
+                        just 4 bytes sitting in a row in memory. Hover a
+                        pixel to see its exact bytes below.
+                    </p>
+                    <MemoryVisualization
+                        image={currentImage}
+                        pixel={hoveredPixel}
+                    />
+                </div>
                 <MathVisualizer
                     activeTab={activeTab}
                     originalPixels={originalPixels}

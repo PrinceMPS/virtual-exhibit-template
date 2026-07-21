@@ -2,6 +2,13 @@ import { useState, useEffect, useCallback } from "react";
 import type { DecodedImage } from "../S04_Group8_lib/types";
 import ImageInput from "./ImageInput";
 import SplitScreen from "./SplitScreen";
+// import PixelInspector from "../components/PixelInspector";
+// import PixelGrid from "../components/PixelGrid";
+// import ImageProcessor from "../components/ImageProcessor";
+import FormatModule from "./FormatModule";
+// import MathVisualizer from "../components/MathVisualizer";
+// import PipelineVisualizer from "../components/PipelineVisualizer";
+// import MemoryVisualization from "../components/MemoryVisualization";
 import ImageProcessor from "./ImageProcessor";
 
 export default function App() {
@@ -73,6 +80,16 @@ export default function App() {
                             allowing the computer to perform processing
                             operations regardless of the original file format.
                         </p>
+                        {/* Format comparison cards: PNG, JPEG, BMP, HEIC */}
+                        <div className="w-full px-10">
+                            <p className="text-white text-sm pb-3">
+                                Not all of these formats store their bytes
+                                the same way — expand a card below to see
+                                how each one actually lays out its data on
+                                disk.
+                            </p>
+                            <FormatModule />
+                        </div>
                         <div className="flex items-center justify-center gap-4 text-white text-lg pb-5">
                             <span className="text-3xl">↓</span>
                             <span>See the process for yourself!</span>
