@@ -61,9 +61,9 @@ export default function SplitScreen({
     const imageUrl = processedImageUrl || currentImage?.url || "";
 
     return (
-        <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="relative aspect-square w-full overflow-hidden">
+        <div className="p-6 text-white max-h-screen max-w-full overflow-x-hidden items-center flex flex-col gap-6">
+            <div id="top-panels" className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-6">
+                <div id="image-panel" className="relative aspect-square w-full md:w-[400px] shrink-0 overflow-hidden rounded-lg bg-neutral-950">
                     {currentImage ? (
                         <RegionSelector
                             imageUrl={imageUrl}
@@ -100,12 +100,12 @@ export default function SplitScreen({
                     </div>
                 </div>
 
-                <div id="pixel-grid-panel">
+                <div id="pixel-grid-panel" className="relative w-full md:w-[400px] shrink-0">
                     <PixelGrid pixelData={pixels} />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                 <MathVisualizer
                     activeTab={activeTab}
                     originalPixels={originalPixels}

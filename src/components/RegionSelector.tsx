@@ -32,7 +32,8 @@ export default function RegionSelector({
     onPixelsChange,
 }: RegionSelectorProps) {
     const [coords, setCoords] = useState<RegionCoords>(DEFAULT_REGION);
-    const [isVisible, setIsVisible] = useState(false);
+    const [isVisible] = useState(true);
+    const [isStatic, setIsStatic] = useState(false);
 
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -60,7 +61,7 @@ export default function RegionSelector({
         };
     }, [imageUrl]);
 
-    const handlePointerMove = useCallback(
+    const getRegionCoords = useCallback(
         (e: React.PointerEvent<HTMLDivElement>) => {
             const canvas = canvasRef.current;
             if (!canvas) return;
@@ -88,26 +89,45 @@ export default function RegionSelector({
 
             setCoords(newCoords);
 
-            // change in region = change in pixel grid
-            if (canvasRef.current) {
-                const pixels =
-                    canvasRef.current
-                        .getContext("2d")
-                        ?.getImageData(
-                            localX,
-                            localY,
-                            SELECTOR_SIZE,
-                            SELECTOR_SIZE,
-                        ) || null;
-                onPixelsChange(pixels);
-            }
+            // Change in region = change in pixel grid
+            const pixels =
+                canvas
+                    .getContext("2d")
+                    ?.getImageData(
+                        localX,
+                        localY,
+                        SELECTOR_SIZE,
+                        SELECTOR_SIZE
+                    ) || null;
+
+            onPixelsChange(pixels);
         },
-        [onPixelsChange],
+        [onPixelsChange]
     );
 
-    // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss
-    // specifically does not yield the desire result, hence the need for manual style properties to override
-    // any CSS styling and ensure the region appears on top of the image correctly
+    const handlePointerMove = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            // even if mouse keeps moving, becuase it is static it will not update pixel selector
+            if (isStatic) return; 
+
+            getRegionCoords(e); // constant based on movement of the pointer
+        },
+        [isStatic, getRegionCoords]
+    );
+
+    const handlePointerClick = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            const isStaticState = !isStatic;
+            setIsStatic(isStaticState);
+
+            // if true, store the current region
+            if (isStaticState) {
+                getRegionCoords(e);
+            }
+        },
+        [isStatic, getRegionCoords]
+    );
+
     return (
         <div
             id="image-container-frame"
@@ -117,13 +137,12 @@ export default function RegionSelector({
                 maxWidth: `${CANVAS_SIZE}px`,
                 aspectRatio: "1 / 1",
                 userSelect: "none",
-                cursor: "none",
+                cursor: isStatic ? "pointer": "none",
                 margin: "0 auto",
                 zIndex: 50,
             }}
             onPointerMove={handlePointerMove}
-            onPointerEnter={() => setIsVisible(true)}
-            onPointerLeave={() => setIsVisible(false)}
+            onClick={handlePointerClick}
         >
             <canvas
                 ref={canvasRef}
@@ -137,7 +156,25 @@ export default function RegionSelector({
                 }}
             />
 
-            {isVisible && (
+            {isVisible && isStatic && (
+                <div
+                    id="square-selector"
+                    style={{
+                        left: `${coords.x}px`,
+                        top: `${coords.y}px`,
+                        width: `${coords.w}px`,
+                        height: `${coords.h}px`,
+                        position: "absolute",
+                        zIndex: 99,
+                        pointerEvents: "none",
+                        border: "2px solid #85f7cd",
+                        boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                    }}
+                />
+            )}
+
+            {isVisible && !isStatic && (
                 <div
                     id="square-selector"
                     style={{
@@ -150,7 +187,7 @@ export default function RegionSelector({
                         pointerEvents: "none",
                         border: "2px solid #ffffff",
                         boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
-                        backgroundColor: "rgba(255, 255, 255, 0.3)",
+                        backgroundColor: "rgba(255, 255, 255, 0.4)",
                     }}
                 />
             )}
