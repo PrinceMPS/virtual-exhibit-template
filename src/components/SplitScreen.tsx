@@ -1,37 +1,73 @@
 import type { DecodedImage } from "../S04_Group8_lib/types";
 import RegionSelector from "./RegionSelector";
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import PixelGrid from "./PixelGrid";
+import MathVisualizer from "./MathVisualizer";
+import PipelineVisualizer from "./PipelineVisualizer";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
+    processedImageData: ImageData | null;
+    activeTab: string;
+    operationParams: { brightness: number; scale: number; rotate: number };
 }
 
-/*
- * RegionSelector holds the image so that the coordinates getting returned are accurate
- *
- */
-export default function SplitScreen({ currentImage }: SplitScreenProps) {
+function imageDataToUrl(data: ImageData): string {
+    const c = document.createElement("canvas");
+    c.width = data.width;
+    c.height = data.height;
+    const ctx = c.getContext("2d");
+    if (!ctx) return "";
+    ctx.putImageData(data, 0, 0);
+    return c.toDataURL();
+}
+
+export default function SplitScreen({
+    currentImage,
+    processedImageData,
+    activeTab,
+    operationParams,
+}: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
+    const [originalPixels, setOriginalPixels] = useState<ImageData | null>(
+        null,
+    );
+    const [processedPixels, setProcessedPixels] = useState<ImageData | null>(
+        null,
+    );
+
+    const processedImageUrl = useMemo(() => {
+        if (!processedImageData) return null;
+        return imageDataToUrl(processedImageData);
+    }, [processedImageData]);
+
+    useEffect(() => {
+        setOriginalPixels(null);
+        setProcessedPixels(null);
+    }, [currentImage?.id]);
+
+    const handlePixelsChange = useCallback(
+        (data: ImageData | null) => {
+            setPixels(data);
+            if (processedImageData) {
+                setProcessedPixels(data);
+            } else {
+                setOriginalPixels(data);
+            }
+        },
+        [processedImageData],
+    );
+
+    const imageUrl = processedImageUrl || currentImage?.url || "";
 
     return (
         <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
-            {/* <div className="flex gap-4">
-                <button
-                    type="button"
-                    className="px-4 py-2 bg-sky-500 rounded font-medium"
-                    onClick={onChangeImage}
-                >
-                    Change Image
-                </button>
-            </div> */}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="relative aspect-square w-full overflow-hidden">
                     {currentImage ? (
                         <RegionSelector
-                            imageUrl={currentImage.url}
-                            onPixelsChange={setPixels}
+                            imageUrl={imageUrl}
+                            onPixelsChange={handlePixelsChange}
                         />
                     ) : (
                         <div className="w-full h-full flex items-center justify-center bg-neutral-800 text-neutral-400">
@@ -65,30 +101,22 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                 </div>
 
                 <div id="pixel-grid-panel">
-                    <PixelGrid pixelData={pixels}></PixelGrid>
+                    <PixelGrid pixelData={pixels} />
                 </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-                <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
-                        How it works in math
-                    </h3>
-                    <p className="text-neutral-400 text-sm">
-                        Explanation text here
-                    </p>
-                    <span>[Math Matrix Visual Placeholder]</span>
-                </div>
-                <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
-                        How it works in memory
-                    </h3>
-                    <p className="text-neutral-400 text-sm">
-                        Explanation text here
-                    </p>
-                    <span>[Memory Layout Visual Placeholder]</span>
-                </div>
+                <MathVisualizer
+                    activeTab={activeTab}
+                    originalPixels={originalPixels}
+                    processedPixels={processedPixels}
+                    params={operationParams}
+                    originalWidth={currentImage?.width ?? 0}
+                    originalHeight={currentImage?.height ?? 0}
+                />
+                <PipelineVisualizer />
             </div>
+
         </div>
     );
 }
