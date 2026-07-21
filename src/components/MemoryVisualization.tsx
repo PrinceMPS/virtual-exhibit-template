@@ -4,11 +4,9 @@ import type { DecodedImage, Pixel } from "../S04_Group8_lib/types";
 interface MemoryVisualizationProps {
     image?: DecodedImage | null;
     /**
-     * The pixel to center the byte table on. PixelGrid currently tracks
-     * `hoveredPixel` as internal state only — it isn't bubbled up yet.
-     * Once PixelGrid gains an onPixelHover/onPixelSelect callback and App
-     * lifts that state, pass it straight through here. Until then this
-     * component tracks its own selection so it's usable standalone.
+     * The pixel to center the byte table on. Wired from SplitScreen,
+     * which lifts PixelGrid's onPixelChange callback into hoveredPixel
+     * state and passes it straight through as this prop.
      */
     pixel?: Pixel | null;
     rowCount?: number;

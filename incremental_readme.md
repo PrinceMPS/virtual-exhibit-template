@@ -184,9 +184,19 @@ See Proposal: [Original Proposal](./README.md)
 - Educational Text Content on each page
 
 ---
+### 07/21/2026 – FormatModule + MemoryVisualization
+
+**Contributor/s**
+
+- Tan, Paul Aiden
+- Sia, Justin Michael
+
+**Tasks Accomplished**
+- Integration of FormatModule + MemoryVisualization with other files
+- Added further documentation for FormatModule + MemoryVisualization files
 
 ## Use of Generative AI/LLM
 
 - DeepSeek was used to help identify and delegate tasks into relevant milestone divisions.
 - Claude was used to elaborate on what certain functions related to an HTML Canvas Element did. It also provided knowledge how RGB-to-HSL conversion is performed but did not contribute to the programmed function.
-- ChatGPT was used to check the grammar and improve the wording of this md file. 
+- ChatGPT was used to check the grammar and improve the wording of this md file and documentations/comments. 

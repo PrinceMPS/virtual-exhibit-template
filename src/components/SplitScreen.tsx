@@ -3,6 +3,7 @@ import RegionSelector from "./RegionSelector";
 import { useState } from "react";
 import PixelGrid from "./PixelGrid";
 import { type Pixel } from "../S04_Group8_lib/types";
+import MemoryVisualization from "./MemoryVisualization";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
@@ -89,9 +90,14 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                         How it works in memory
                     </h3>
                     <p className="text-neutral-400 text-sm">
-                        Explanation text here
+                        Every pixel you hover in the grid above is really
+                        just 4 bytes sitting in a row in memory. Hover a
+                        pixel to see its exact bytes below.
                     </p>
-                    <span>[Memory Layout Visual Placeholder]</span>
+                    <MemoryVisualization
+                        image={currentImage}
+                        pixel={hoveredPixel}
+                    />
                 </div>
             </div>
         </div>
