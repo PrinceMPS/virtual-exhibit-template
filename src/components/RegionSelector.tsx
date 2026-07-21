@@ -97,22 +97,22 @@ export default function RegionSelector({
                         localX,
                         localY,
                         SELECTOR_SIZE,
-                        SELECTOR_SIZE
+                        SELECTOR_SIZE,
                     ) || null;
 
             onPixelsChange(pixels);
         },
-        [onPixelsChange]
+        [onPixelsChange],
     );
 
     const handlePointerMove = useCallback(
         (e: React.PointerEvent<HTMLDivElement>) => {
             // even if mouse keeps moving, becuase it is static it will not update pixel selector
-            if (isStatic) return; 
+            if (isStatic) return;
 
             getRegionCoords(e); // constant based on movement of the pointer
         },
-        [isStatic, getRegionCoords]
+        [isStatic, getRegionCoords],
     );
 
     const handlePointerClick = useCallback(
@@ -125,72 +125,82 @@ export default function RegionSelector({
                 getRegionCoords(e);
             }
         },
-        [isStatic, getRegionCoords]
+        [isStatic, getRegionCoords],
     );
 
     return (
-        <div
-            id="image-container-frame"
-            style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: `${CANVAS_SIZE}px`,
-                aspectRatio: "1 / 1",
-                userSelect: "none",
-                cursor: isStatic ? "pointer": "none",
-                margin: "0 auto",
-                zIndex: 50,
-            }}
-            onPointerMove={handlePointerMove}
-            onClick={handlePointerClick}
-        >
-            <canvas
-                ref={canvasRef}
-                width={CANVAS_SIZE}
-                height={CANVAS_SIZE}
+        <>
+            <div
+                id="image-container-frame"
                 style={{
+                    position: "relative",
                     width: "100%",
-                    height: "100%",
-                    display: "block",
-                    backgroundColor: "#0a0a0a",
+                    maxWidth: `${CANVAS_SIZE}px`,
+                    aspectRatio: "1 / 1",
+                    userSelect: "none",
+                    cursor: isStatic ? "pointer" : "none",
+                    margin: "0 auto",
+                    zIndex: 50,
                 }}
-            />
-
-            {isVisible && isStatic && (
-                <div
-                    id="square-selector"
+                onPointerMove={handlePointerMove}
+                onClick={handlePointerClick}
+            >
+                <canvas
+                    ref={canvasRef}
+                    width={CANVAS_SIZE}
+                    height={CANVAS_SIZE}
                     style={{
-                        left: `${coords.x}px`,
-                        top: `${coords.y}px`,
-                        width: `${coords.w}px`,
-                        height: `${coords.h}px`,
-                        position: "absolute",
-                        zIndex: 99,
-                        pointerEvents: "none",
-                        border: "2px solid #85f7cd",
-                        boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
-                        backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        width: "100%",
+                        height: "100%",
+                        display: "block",
+                        backgroundColor: "#0a0a0a",
                     }}
                 />
-            )}
 
-            {isVisible && !isStatic && (
-                <div
-                    id="square-selector"
-                    style={{
-                        left: `${coords.x}px`,
-                        top: `${coords.y}px`,
-                        width: `${coords.w}px`,
-                        height: `${coords.h}px`,
-                        position: "absolute",
-                        zIndex: 99,
-                        pointerEvents: "none",
-                        border: "2px solid #ffffff",
-                        boxShadow: "0 0 0 1px #000000, inset 0 0 0 1px #000000",
-                        backgroundColor: "rgba(255, 255, 255, 0.4)",
-                    }}
-                />
-            )}
-        </div>
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-[60] px-2 py-1 rounded bg-black/70 text-neutral-500 text-sm pointer-events-none whitespace-nowrap">
+                    {isStatic
+                        ? "Click to make the cursor movable"
+                        : "Click to make the cursor static"}
+                </div>
+
+                {isVisible && isStatic && (
+                    <div
+                        id="square-selector"
+                        style={{
+                            left: `${coords.x}px`,
+                            top: `${coords.y}px`,
+                            width: `${coords.w}px`,
+                            height: `${coords.h}px`,
+                            position: "absolute",
+                            zIndex: 99,
+                            pointerEvents: "none",
+                            border: "2px solid #85f7cd",
+                            boxShadow:
+                                "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                            backgroundColor: "rgba(255, 255, 255, 0.2)",
+                        }}
+                    />
+                )}
+
+                {isVisible && !isStatic && (
+                    <div
+                        id="square-selector"
+                        style={{
+                            left: `${coords.x}px`,
+                            top: `${coords.y}px`,
+                            width: `${coords.w}px`,
+                            height: `${coords.h}px`,
+                            position: "absolute",
+                            zIndex: 99,
+                            pointerEvents: "none",
+                            border: "2px solid #ffffff",
+                            boxShadow:
+                                "0 0 0 1px #000000, inset 0 0 0 1px #000000",
+                            backgroundColor: "rgba(255, 255, 255, 0.4)",
+                        }}
+                    />
+                )}
+            </div>
+        </>
     );
 }

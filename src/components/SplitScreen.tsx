@@ -62,8 +62,14 @@ export default function SplitScreen({
 
     return (
         <div className="p-6 text-white max-h-screen max-w-full overflow-x-hidden items-center flex flex-col gap-6">
-            <div id="top-panels" className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-6">
-                <div id="image-panel" className="relative aspect-square w-full md:w-[400px] shrink-0 overflow-hidden rounded-lg bg-neutral-950">
+            <div
+                id="top-panels"
+                className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-6"
+            >
+                <div
+                    id="image-panel"
+                    className="relative aspect-square w-full md:w-[400px] shrink-0 overflow-hidden rounded-lg bg-neutral-950"
+                >
                     {currentImage ? (
                         <RegionSelector
                             imageUrl={imageUrl}
@@ -75,7 +81,7 @@ export default function SplitScreen({
                         </div>
                     )}
 
-                    <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
+                    {/* <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
                         <button
                             type="button"
                             title="Rotate Clockwise"
@@ -97,10 +103,13 @@ export default function SplitScreen({
                         >
                             +
                         </button>
-                    </div>
+                    </div> */}
                 </div>
 
-                <div id="pixel-grid-panel" className="relative w-full md:w-[400px] shrink-0">
+                <div
+                    id="pixel-grid-panel"
+                    className="relative w-full md:w-[400px] shrink-0"
+                >
                     <PixelGrid pixelData={pixels} />
                 </div>
             </div>
@@ -116,7 +125,6 @@ export default function SplitScreen({
                 />
                 <PipelineVisualizer />
             </div>
-
         </div>
     );
 }
