@@ -128,11 +128,6 @@ export default function RegionSelector({
         [isStatic, getRegionCoords]
     );
 
-    
-
-    // AI Declaration: Used AI to figure out what style classes are needed. Upon experimentation, tailwindcss
-    // specifically does not yield the desire result, hence the need for manual style properties to override
-    // any CSS styling and ensure the region appears on top of the image correctly
     return (
         <div
             id="image-container-frame"
