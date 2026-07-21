@@ -2,6 +2,7 @@ import type { DecodedImage } from "../S04_Group8_lib/types";
 import RegionSelector from "./RegionSelector";
 import { useState } from "react";
 import PixelGrid from "./PixelGrid";
+import { type Pixel } from "../S04_Group8_lib/types";
 
 interface SplitScreenProps {
     currentImage: DecodedImage | null;
@@ -13,6 +14,7 @@ interface SplitScreenProps {
  */
 export default function SplitScreen({ currentImage }: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
+    const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
 
     return (
         <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
@@ -65,7 +67,10 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                 </div>
 
                 <div id="pixel-grid-panel">
-                    <PixelGrid pixelData={pixels}></PixelGrid>
+                    <PixelGrid
+                        pixelData={pixels}
+                        onPixelChange={setHoveredPixel}
+                    ></PixelGrid>
                 </div>
             </div>
 

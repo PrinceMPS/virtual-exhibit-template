@@ -3,9 +3,13 @@ import { type Pixel } from "../S04_Group8_lib/types";
 
 interface PixelGridProps {
     pixelData: ImageData | null;
+    onPixelChange: (pixel: Pixel | null) => void;
 }
 
-export default function PixelGrid({ pixelData }: PixelGridProps) {
+export default function PixelGrid({
+    pixelData,
+    onPixelChange,
+}: PixelGridProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
     const DISPLAY_SIZE = 400;
@@ -83,6 +87,7 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                 cellY >= gridHeight
             ) {
                 setHoveredPixel(null);
+                onPixelChange(null);
                 return;
             }
 
@@ -97,6 +102,7 @@ export default function PixelGrid({ pixelData }: PixelGridProps) {
                 a: data[index + 3],
             };
             setHoveredPixel(pixel);
+            onPixelChange(pixel);
         },
         [pixelData, gridWidth, gridHeight],
     );
