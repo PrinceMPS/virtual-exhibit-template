@@ -354,39 +354,43 @@ export default function ImageProcessor({
                                             Channel Isolation
                                         </p>
                                         <div className="flex gap-2">
-                                            {["r", "g", "b"].map((ch) => (
+                                            {[
+                                                { id: "r", label: "Red", activeClass: "bg-red-600 ring-2 ring-red-400", inactiveClass: "bg-neutral-700 hover:bg-red-900" },
+                                                { id: "g", label: "Green", activeClass: "bg-green-600 ring-2 ring-green-400", inactiveClass: "bg-neutral-700 hover:bg-green-900" },
+                                                { id: "b", label: "Blue", activeClass: "bg-blue-600 ring-2 ring-blue-400", inactiveClass: "bg-neutral-700 hover:bg-blue-900" },
+                                            ].map(({ id, label, activeClass, inactiveClass }) => (
                                                 <button
-                                                    key={ch}
+                                                    key={id}
                                                     type="button"
-                                                    onClick={() =>
-                                                        setColorFilterChannel(
-                                                            ch ===
-                                                                colorFilterChannel
-                                                                ? ""
-                                                                : ch,
-                                                        )
-                                                    }
-                                                    className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                                                        colorFilterChannel ===
-                                                        ch
-                                                            ? "bg-sky-500 text-white"
-                                                            : "bg-neutral-700 text-neutral-300 hover:bg-neutral-600"
+                                                    onClick={() => {
+                                                        const newCh = id === colorFilterChannel ? "" : id;
+                                                        setColorFilterChannel(newCh);
+                                                        if (newCh) {
+                                                            applyFilterFromOriginal((data) =>
+                                                                channelIsolate(data, newCh),
+                                                            );
+                                                            if (onParamsChange)
+                                                                onParamsChange({
+                                                                    brightness: brightnessVal,
+                                                                    scale: scaleVal,
+                                                                    rotate: rotateVal,
+                                                                    tintR,
+                                                                    tintG,
+                                                                    tintB,
+                                                                    colorFilterChannel: newCh,
+                                                                });
+                                                        } else {
+                                                            resetImage();
+                                                        }
+                                                    }}
+                                                    className={`px-3 py-1.5 rounded text-xs font-semibold text-white transition-all ${
+                                                        colorFilterChannel === id ? activeClass : inactiveClass
                                                     }`}
                                                 >
-                                                    {ch === "r" && "Red"}
-                                                    {ch === "g" && "Green"}
-                                                    {ch === "b" && "Blue"}
+                                                    {label}
                                                 </button>
                                             ))}
                                         </div>
-                                        <button
-                                            type="button"
-                                            onClick={applyChannelIsolate}
-                                            disabled={!colorFilterChannel}
-                                            className="mt-2 px-4 py-1.5 bg-neutral-700 hover:bg-neutral-600 text-neutral-200 rounded text-xs font-medium transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                                        >
-                                            Apply Channel Filter
-                                        </button>
                                     </div>
 
                                     <div className="border-t border-neutral-600 pt-3">
