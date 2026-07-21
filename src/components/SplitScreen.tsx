@@ -15,19 +15,9 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
     const [pixels, setPixels] = useState<ImageData | null>(null);
 
     return (
-        <div className="p-6 bg-neutral-900 text-white min-h-screen min-w-screen flex flex-col gap-6">
-            {/* <div className="flex gap-4">
-                <button
-                    type="button"
-                    className="px-4 py-2 bg-sky-500 rounded font-medium"
-                    onClick={onChangeImage}
-                >
-                    Change Image
-                </button>
-            </div> */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="relative aspect-square w-full overflow-hidden">
+        <div className="p-6 text-white max-h-screen max-w-full overflow-x-hidden items-center flex flex-col gap-6">
+            <div id="top-panels" className="w-full max-w-5xl flex flex-col md:flex-row items-start justify-center gap-6">
+                <div id="image-panel" className="relative aspect-square w-full md:w-[400px] shrink-0 overflow-hidden rounded-lg bg-neutral-950">
                     {currentImage ? (
                         <RegionSelector
                             imageUrl={currentImage.url}
@@ -64,12 +54,11 @@ export default function SplitScreen({ currentImage }: SplitScreenProps) {
                     </div>
                 </div>
 
-                <div id="pixel-grid-panel">
+                <div id="pixel-grid-panel" className="relative w-full md:w-[400px] shrink-0">
                     <PixelGrid pixelData={pixels}></PixelGrid>
                 </div>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+            <div id="bottom-documentation" className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                 <div className="p-6">
                     <h3 className="text-lg font-semibold text-sky-400 mb-2">
                         How it works in math
