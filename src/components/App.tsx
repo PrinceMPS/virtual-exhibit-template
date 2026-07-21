@@ -28,18 +28,15 @@ export default function App() {
         setOperationParams({ brightness: 0, scale: 100, rotate: 0 });
     }, [currentImage?.id]);
 
-    const handleProcessedUpdate = useCallback(
-        (data: ImageData | null) => {
-            setProcessedImageData(data);
-        },
-        [],
-    );
+    const handleProcessedUpdate = useCallback((data: ImageData | null) => {
+        setProcessedImageData(data);
+    }, []);
 
     const handleParamsChange = useCallback(
         (params: { brightness: number; scale: number; rotate: number }) => {
             setOperationParams(params);
         },
-        [],
+        []
     );
 
     const handleTabChange = useCallback((tabId: string) => {
@@ -82,11 +79,10 @@ export default function App() {
                         </p>
                         {/* Format comparison cards: PNG, JPEG, BMP, HEIC */}
                         <div className="w-full px-10">
-                            <p className="text-white text-sm pb-3">
-                                Not all of these formats store their bytes
-                                the same way — expand a card below to see
-                                how each one actually lays out its data on
-                                disk.
+                            <p className="text-white text-justify text-sm pb-3">
+                                Not all of these formats store their bytes the
+                                same way — expand a card below to see how each
+                                one actually lays out its data on disk.
                             </p>
                             <FormatModule />
                         </div>

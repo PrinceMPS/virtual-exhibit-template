@@ -33,10 +33,10 @@ export default function SplitScreen({
     const [pixels, setPixels] = useState<ImageData | null>(null);
     const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
     const [originalPixels, setOriginalPixels] = useState<ImageData | null>(
-        null,
+        null
     );
     const [processedPixels, setProcessedPixels] = useState<ImageData | null>(
-        null,
+        null
     );
 
     const processedImageUrl = useMemo(() => {
@@ -58,7 +58,7 @@ export default function SplitScreen({
                 setOriginalPixels(data);
             }
         },
-        [processedImageData],
+        [processedImageData]
     );
 
     const imageUrl = processedImageUrl || currentImage?.url || "";
@@ -84,30 +84,6 @@ export default function SplitScreen({
                             No image loaded
                         </div>
                     )}
-
-                    {/* <div className="absolute bottom-4 left-4 z-50 flex items-center gap-2 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-neutral-700 pointer-events-auto select-none">
-                        <button
-                            type="button"
-                            title="Rotate Clockwise"
-                            className="p-1.5 text-neutral-300"
-                        >
-                            ↻
-                        </button>
-                        <button
-                            type="button"
-                            title="Zoom Out"
-                            className="p-1.5 text-neutral-300"
-                        >
-                            −
-                        </button>
-                        <button
-                            type="button"
-                            title="Zoom In"
-                            className="p-1.5 text-neutral-300"
-                        >
-                            +
-                        </button>
-                    </div> */}
                 </div>
 
                 <div id="pixel-grid-panel">
@@ -119,10 +95,10 @@ export default function SplitScreen({
             </div>
 
             <div>
-                <h2 className="text-xl font-semibold text-sky-400 mb-1">
+                <h2 className="text-xl font-semibold text-justify text-sky-400 mb-1">
                     What's actually happening
                 </h2>
-                <p className="text-neutral-400 text-sm max-w-2xl">
+                <p className="text-neutral-400 text-justify text-sm max-w-2xl">
                     Whatever pixel you're hovering above is really just four
                     numbers, but those numbers get used in two very different
                     ways depending on what you're doing with the image. Here's
@@ -132,10 +108,10 @@ export default function SplitScreen({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
                 <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                    <h3 className="text-lg font-semibold text-justify text-sky-400 mb-2">
                         How it works in math
                     </h3>
-                    <p className="text-neutral-400 text-sm">
+                    <p className="text-neutral-400 text-justify text-sm">
                         Every transform is a small equation applied to each
                         pixel. Grayscale isn't a simple average of red, green,
                         and blue, human eyes are more sensitive to green, so a
@@ -159,10 +135,10 @@ export default function SplitScreen({
                     />
                 </div>
                 <div className="p-6">
-                    <h3 className="text-lg font-semibold text-sky-400 mb-2">
+                    <h3 className="text-lg font-semibold text-justify text-sky-400 mb-2">
                         How it works in memory
                     </h3>
-                    <p className="text-neutral-400 text-sm">
+                    <p className="text-neutral-400 text-justify text-sm">
                         Every pixel you hover in the grid above is really just 4
                         bytes sitting in a row in memory. Hover a pixel to see
                         its exact bytes below.
