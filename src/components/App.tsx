@@ -24,10 +24,10 @@ export default function App() {
     });
     const [hoveredPixel, setHoveredPixel] = useState<Pixel | null>(null);
     const [originalPixels, setOriginalPixels] = useState<ImageData | null>(
-        null,
+        null
     );
     const [processedPixels, setProcessedPixels] = useState<ImageData | null>(
-        null,
+        null
     );
 
     useEffect(() => {
@@ -44,7 +44,7 @@ export default function App() {
         (params: { brightness: number; scale: number; rotate: number }) => {
             setOperationParams(params);
         },
-        [],
+        []
     );
 
     const handleTabChange = useCallback((tabId: string) => {
@@ -53,6 +53,7 @@ export default function App() {
 
     if (!currentImage) {
         return (
+            //Homepage with instructions and format comparison cards
             <div className="w-full h-full bg-[#292929] pl-10 pr-1">
                 <div className="flex h-full">
                     <div
@@ -100,6 +101,66 @@ export default function App() {
                             <span className="text-3xl">↓</span>
                         </div>
                         <ImageInput onImageLoad={setCurrentImage} />
+                        <div className="w-full px-10 pt-10">
+                            <h3 className="text-white font-bold text-lg mb-3">
+                                References
+                            </h3>
+                            <ul className="text-white text-sm space-y-2 list-disc list-inside">
+                                <li>
+                                    British Broadcasting Corporation. (2026).{" "}
+                                    <i>
+                                        Representing images - digital data -
+                                        CCEA - GCSE Digital Technology (CCEA)
+                                        revision - BBC Bitesize.
+                                    </i>{" "}
+                                    BBC.
+                                    https://www.bbc.co.uk/bitesize/guides/zphqgdm/revision/4
+                                </li>
+                                <li>
+                                    Caplan, P. (2013, September 24). What is a
+                                    JPEG? The invisible object you see every
+                                    day. <i>The Atlantic.</i>{" "}
+                                    https://www.theatlantic.com/technology/archive/2013/09/what-is-a-jpeg-the-invisible-object-you-see-every-day/279954/
+                                </li>
+                                <li>
+                                    Center for Language Technology. (n.d.).{" "}
+                                    <i>
+                                        What is the &quot;.webp&quot; format
+                                        image?
+                                    </i>{" "}
+                                    Indiana University.
+                                    https://celt.indiana.edu/resources/multimedia/webp.html
+                                </li>
+                                <li>
+                                    iMobie. (2020, May 7).{" "}
+                                    <i>
+                                        What is HEIC &amp; what is HEIF:
+                                        Complete info of this new image format.
+                                    </i>{" "}
+                                    https://heic.imobie.com/heif-and-heic.htm
+                                </li>
+                                <li>
+                                    Macmostvideo. (2024, April 5).{" "}
+                                    <i>What are HEIC files?</i> [Video].
+                                    YouTube.
+                                    https://www.youtube.com/watch?v=eS4I4QJEOWU
+                                </li>
+                                <li>
+                                    The Editors of Encyclopaedia Britannica.
+                                    (n.d.). JPEG.{" "}
+                                    <i>Encyclopaedia Britannica.</i>{" "}
+                                    https://www.britannica.com/technology/JPEG
+                                </li>
+                                <li>
+                                    World Wide Web Consortium. (1996, October
+                                    1).{" "}
+                                    <i>
+                                        PNG specification: Data representation.
+                                    </i>{" "}
+                                    https://www.w3.org/TR/PNG-DataRep.html
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,6 +168,7 @@ export default function App() {
     }
 
     return (
+        //Interactive image processing page with split screen and pixel inspector
         <div className="w-full h-full bg-[#292929] p-10 flex flex-row">
             <div className="w-full h-full bg-[#292929] p-10 flex flex-col">
                 <div className="flex flex-col h-full">
