@@ -60,6 +60,12 @@ export default function App() {
                         </p>
                         {/* Format comparison cards: PNG, JPEG, BMP, HEIC */}
                         <div className="w-full px-10">
+                            <p className="text-white text-sm pb-3">
+                                Not all of these formats store their bytes
+                                the same way — expand a card below to see
+                                how each one actually lays out its data on
+                                disk.
+                            </p>
                             <FormatModule />
                         </div>
                         <div className="flex items-center justify-center gap-4 text-white text-lg pb-5">

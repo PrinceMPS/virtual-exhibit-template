@@ -170,7 +170,27 @@ See Proposal: [Original Proposal](./README.md)
 - The current implementations for the code aren't 'elegant' in any way shape or form, will try to refactor and update if given the time
 
 ---
+### 07/21/2026 – FormatModule + MemoryVisualization
 
+**Contributor/s**
+
+- Tan, Paul Aiden
+- Sia, Justin Michael
+
+**Tasks Accomplished**
+- Integration of FormatModule + MemoryVisualization with other files
+- Added further documentation for FormatModule + MemoryVisualization files
+---
+
+### 07/21/2026 – Educational Details 
+
+**Contributor/s**
+
+- Tan, Paul Aiden
+
+**Tasks Accomplished**
+- Added educational details and information in the splitscreen and formatmodule pages. 
+---
 ## Milestones to be Accomplished by Final Submission
 
 - PixelGrid.jsx – for the enlarged pixel grid when a region is selected
@@ -184,17 +204,6 @@ See Proposal: [Original Proposal](./README.md)
 - Educational Text Content on each page
 
 ---
-### 07/21/2026 – FormatModule + MemoryVisualization
-
-**Contributor/s**
-
-- Tan, Paul Aiden
-- Sia, Justin Michael
-
-**Tasks Accomplished**
-- Integration of FormatModule + MemoryVisualization with other files
-- Added further documentation for FormatModule + MemoryVisualization files
-
 ## Use of Generative AI/LLM
 
 - DeepSeek was used to help identify and delegate tasks into relevant milestone divisions.
