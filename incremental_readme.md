@@ -148,13 +148,25 @@ See Proposal: [Original Proposal](./README.md)
 
 ---
 
+### 07/21/2026 - Image Data Modelling + Math Visualization
+
+**Contributor/s**
+
+- Sy, Prince Matthew 
+
+**Tasks Accomplished**
+
+- Created ImageProcessing logic that applies different filters to the image
+- Created MathVisualizer to dynamically show the math that is responsible for the change in the image
+- Added extra feature in ImageProcessing (color filters)
+
+**AHA! moment**
+- while making the invert feature for the ImageProcessing, I realized na adding color filters would not be that much more difficult as the math is similar, just needed to tweak some things here and there to make it appropriate
+
 ## Milestones to be Accomplished by Final Submission
 
 - PixelGrid.jsx – for the enlarged pixel grid when a region is selected
 - PixelInspector.jsx – will display the coordinates, RGB, HSB/HSL, Alpha, Hex, Binary, approximate memory layout
-- imageProcessing.js – handles transform functions: grayscale, rotation, brightness
-- ImageProcessing.jsx – controls for each operation
-- MathVisualizer.jsx – renders transform function formulas
 - PipelineVisualizer.jsx – flowchart visualizer for storage
 - FormatModule.jsx – comparison cards for JPG/JPEG, PNG, BMP, HEIC
 - MemoryVisualization.jsx - compact hex/binary table showing raw pixel data in RAM
